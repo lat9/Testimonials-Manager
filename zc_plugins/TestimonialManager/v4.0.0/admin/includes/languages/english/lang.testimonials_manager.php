@@ -2,12 +2,13 @@
 /**
  * Testimonials Manager
  *
+ * Last Updated: v4.0.0
+ *
  * @version $Id: Testimonials Manager v3.0 4 03-10-2023 davewest $
  * Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) 
  * Copyright 2022 Fonticons, Inc. 
  */
- 
-$define = [
+ $define = [
     'HEADING_TITLE' => 'Testimonials Manager',
     'STATUS_GREEN' => ' approved green ',
     'STATUS_BLUE' => ' pending blue ',
@@ -77,9 +78,6 @@ $define = [
     'TEXT_REMOVE_WARRING' => '<b> Warring: </b> this will remove only the menus and configuration settings!<br /> You must delete all files yourself!',
     'TEXT_UPDATE_WARRING' => '<b> Warring: </b> this will check for updated Testimonials Manager from Zen Cart Plugin\'s. If one exists, you will still need to download and follow the install/upgrade instructions!',
     'TEXT_UPDATE_DISCLAMER' => '<b>Note: </b> We don\'t endorse auto checking by constantly calling to another site<br />We will make it easy for you to do that by clicking this check button, your option not mine.',
-    'TEXT_TM_STATUS_0' => 'Pending Review',
-    'TEXT_TM_STATUS_1' => 'Approved',
-    'TEXT_TM_STATUS_2' => 'Banned - Not allowed to create',
     'TEXT_TESTIMONIALS_OPTIONAL' => '&nbsp;<span class="fieldRequired">(Optional)</span>',
     'TEXT_NO_VOTING' => '&nbsp;&nbsp;Helpful no voting! ',
     'TEXT_YES_VOTING' => '&nbsp;&nbsp;Helpful yes voting! ',
