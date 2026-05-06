@@ -1,0 +1,33 @@
+/*
+ * 
+ * @copyright Copyright 2018 davewest
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: Testimonials_Manager.php v2.0 11-14-2018 davewest $
+ */
+ 
+/*---------- star rating ----------*/
+.star-rating, .back-stars, .front-stars {
+  display: flex;
+}
+
+.star-rating {
+  align-items: center;
+  font-size: 3em;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.back-stars {
+  color:rgba(239,41,41,0.3);
+  position: relative;
+ /* text-shadow: 4px 4px 10px rgba(239,41,41,0.5); */
+}
+
+.front-stars {
+  color:rgba(239,41,41,1);
+  overflow: hidden;
+  position: absolute;
+  text-shadow: 2px 2px 5px rgba(239,41,41,0.6); 
+  top: 0;
+}
+
