@@ -539,7 +539,7 @@ if (sessionLang) {
             $bInfo = new objectInfo($bInfo_array);
         }
  
-        /*** Cowboygeek delete customer re-write get id's from delcust[] *********/      
+        /*** Cowboygeek delete customer re-write get id's from delcust[] *********/
         $howmany = count($_POST['delcust'] ?? 0);  //number of links to delete
         if ($howmany !== 0) {  
             foreach ($_POST['delcust'] as $next_id) {
@@ -660,24 +660,31 @@ if (sessionLang) {
 
             $contents[] = ['text' => '<br>' . TEXT_INFO_TESTIMONIALS_STATUS . ' '  . $teststatus];
 
+            $bInfo->testimonials_title = zen_output_string_protected($bInfo->testimonials_title);
             if (!empty($bInfo->testimonials_image)) {
-                $contents[] = ['text' => '<br>' . zen_image(DIR_WS_CATALOG_IMAGES . $bInfo->testimonials_image, $bInfo->testimonials_title, TESTIMONIAL_IMAGE_WIDTH, TESTIMONIAL_IMAGE_HEIGHT) . '<br><br>' . $bInfo->testimonials_title];
+                $contents[] = [
+                    'text' =>
+                        '<br>' .
+                        zen_image(DIR_WS_CATALOG_IMAGES . $bInfo->testimonials_image, $bInfo->testimonials_title, TESTIMONIAL_IMAGE_WIDTH, TESTIMONIAL_IMAGE_HEIGHT) .
+                        '<br><br>' .
+                        $bInfo->testimonials_title
+                ];
             } else {
                 $contents[] = ['text' => '<br>' . TEXT_IMAGE_NONEXISTENT];
             }
             $contents[] = ['text' => '<br>' . TEXT_INFO_TESTIMONIALS_RATING . ' '  . str_repeat(zen_icon('star-shadow', size: 'lg'), (int)$bInfo->tm_rating))];
-            $contents[] = ['text' => '<br><b>' . TEXT_INFO_TESTIMONIALS_PUBLIC  . ' '  . $bInfo->tm_make_public . '</b>'];
-            $contents[] = ['text' => '<br>' . TEXT_INFO_TESTIMONIALS_FEEDBACK . ' '  . $bInfo->tm_feedback];
-            $contents[] = ['text' => '<br>' . TEXT_INFO_TESTIMONIALS_CONTACT_NAME . ' '  . $bInfo->testimonials_name];
-            $contents[] = ['text' => '<br>' . TEXT_INFO_TESTIMONIALS_CONTACT_EMAIL . ' ' . $bInfo->testimonials_mail];
-            $contents[] = ['text' => '<br>' . TEXT_INFO_TESTIMONIALS_TITLE . ' ' . $bInfo->testimonials_title];
+            $contents[] = ['text' => '<br><b>' . TEXT_INFO_TESTIMONIALS_PUBLIC  . ' '  . zen_output_string_protected($bInfo->tm_make_public) . '</b>'];
+            $contents[] = ['text' => '<br>' . TEXT_INFO_TESTIMONIALS_FEEDBACK . ' '  . zen_output_string_protected($bInfo->tm_feedback]);
+            $contents[] = ['text' => '<br>' . TEXT_INFO_TESTIMONIALS_CONTACT_NAME . ' '  . zen_output_string_protected($bInfo->testimonials_name)];
+            $contents[] = ['text' => '<br>' . TEXT_INFO_TESTIMONIALS_CONTACT_EMAIL . ' ' . zen_output_string_protected($bInfo->testimonials_mail)];
+            $contents[] = ['text' => '<br>' . TEXT_INFO_TESTIMONIALS_TITLE . ' ' . zen_output_string_protected($bInfo->testimonials_title)];
             $contents[] = ['text' => '<br>' . TEXT_INFO_TESTIMONIALS_DESCRIPTION . '<br> ' . zen_clean_html($bInfo->testimonials_html_text)];
-            $contents[] = ['text' => '<br>' . TEXT_INFO_TESTIMONIALS_CONTACT . ' '  . $bInfo->tm_contact_user];
-            $contents[] = ['text' => '<br>' . TEXT_INFO_TESTIMONIALS_CONTACT_PHONE . ' '  . $bInfo->tm_contact_phone];
+            $contents[] = ['text' => '<br>' . TEXT_INFO_TESTIMONIALS_CONTACT . ' '  . zen_output_string_protected($bInfo->tm_contact_user)];
+            $contents[] = ['text' => '<br>' . TEXT_INFO_TESTIMONIALS_CONTACT_PHONE . ' '  . zen_output_string_protected($bInfo->tm_contact_phone)];
             $contents[] = ['text' => '<br>' . TEXT_INFO_TESTIMONIALS_PRIVACY . ' '  . $bInfo->tm_privacy_conditions];
             $contents[] = ['text' => '<br>' . TEXT_YES_VOTING . ' '  . $bInfo->helpful_yes];
             $contents[] = ['text' => '<br>' . TEXT_NO_VOTING . ' '  . $bInfo->helpful_no];
-            $contents[] = ['text' => '<br>' . TEXT_INFO_TESTIMONIALS_GEN_INFO . '<br>'  . $bInfo->tm_gen_info];
+            $contents[] = ['text' => '<br>' . TEXT_INFO_TESTIMONIALS_GEN_INFO . '<br>'  . zen_output_string_protected($bInfo->tm_gen_info)];
             $contents[] = ['text' => '<br>' . TEXT_INFO_TESTIMONIALS_SUBMIT_IMAGE . '<br>'  . $bInfo->testimonials_upimg];
             if (!empty($bInfo->testimonials_upimg)) {
                 $contents[] = ['text' => zen_image(DIR_WS_CATALOG_IMAGES . $bInfo->testimonials_upimg, $bInfo->testimonials_title, 150)];
