@@ -10,15 +10,14 @@
  * @version $Id: Testimonials_Manager  v2.0 11-14-2018 davewest $
  */
 ?>
-<script><!--
+<script>
 function popupWindow(url) {
- // simple popup window for a image
-
- var w = 380, h = 240;
+    // simple popup window for a image
+    var w = 380, h = 240;
 
     if (document.getElementById) {
-      w = screen.availWidth;
-      h = screen.availHeight;
+        w = screen.availWidth;
+        h = screen.availHeight;
     }
 
     var popW = 650, popH = 500;
@@ -26,10 +25,8 @@ function popupWindow(url) {
     var leftPos = (w - popW) / 2;
     var topPos = (h - popH) / 2;
 
-
     msgWindow = window.open('', 'popup', 'width=' + popW + ',height=' + popH + ',top=' + topPos + ',left=' + leftPos + ',       scrollbars=yes');
 
-     msgWindow.document.write ('<HTML><HEAD><TITLE>Popup Window</TITLE></HEAD><BODY><FORM NAME="form1">' + '<img src="' + url + '" />' + ' Click the button below to close this window.<br />' + '<INPUT TYPE="button" VALUE="OK"onClick="window.close();"></FORM></BODY></HTML>');
-}    
-
-//--></script>
+    msgWindow.document.write ('<HTML><HEAD><TITLE>Popup Window</TITLE></HEAD><BODY><FORM NAME="form1">' + '<img src="' + url + '" />' + ' Click the button below to close this window.<br />' + '<INPUT TYPE="button" VALUE="OK"onClick="window.close();"></FORM></BODY></HTML>');
+}
+</script>

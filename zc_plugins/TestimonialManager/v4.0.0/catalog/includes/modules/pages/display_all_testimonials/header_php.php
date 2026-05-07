@@ -14,13 +14,19 @@
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_ALL_TESTIMONIALS');
 
-require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
+require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 
-  $breadcrumb->add(NAVBAR_TITLE);
-  
-  $testimonials_query_raw = "select * from " . TABLE_TESTIMONIALS_MANAGER . " where status = 1 and tm_make_public = 'yes' and language_id = '" . (int)$_SESSION['languages_id'] . "' order by date_added DESC, testimonials_title";
+$breadcrumb->add(NAVBAR_TITLE);
 
-  $testimonials_split = new splitPageResults($testimonials_query_raw, MAX_DISPLAY_TESTIMONIALS_MANAGER_ALL_TESTIMONIALS);
+$testimonials_query_raw =
+    "SELECT *
+       FROM " . TABLE_TESTIMONIALS_MANAGER . "
+      WHERE status = 1
+        AND tm_make_public = 'yes'
+        AND language_id = " . (int)$_SESSION['languages_id'] . "
+      ORDER BY date_added DESC, testimonials_title";
 
-  // This should be last line of the script:
-  $zco_notifier->notify('NOTIFY_HEADER_END_ALL_TESTIMONIALS');
+$testimonials_split = new splitPageResults($testimonials_query_raw, (int)MAX_DISPLAY_TESTIMONIALS_MANAGER_ALL_TESTIMONIALS);
+
+// This should be last line of the script:
+$zco_notifier->notify('NOTIFY_HEADER_END_ALL_TESTIMONIALS');

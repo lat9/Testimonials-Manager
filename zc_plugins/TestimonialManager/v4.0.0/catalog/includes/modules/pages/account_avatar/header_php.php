@@ -14,57 +14,49 @@
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_AVATAR');
  
-require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
+require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 
-if (!zen_is_logged_in()) {
-  $_SESSION['navigation']->set_snapshot();
-  zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
+if (!zen_is_logged_in() || zen_in_guest_checkout()) {
+    $_SESSION['navigation']->set_snapshot();
+    zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
 
 $breadcrumb->add(HEADING_TITLE_AVATAR);
 
- if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
+if (($_GET['action'] ?? '') === 'send' && isset($_POST['tm_img'])) {
+    if (str_starts_with($_POST['tm_img'], 'data:image')) {
+        $img = $_POST['tm_img'];
+        if (str_starts_with($img, 'data:image/jpeg;base64,')) {
+            $img = str_replace('data:image/jpeg;base64,', '', $img);  
+            $ext = '.jpg';
+        } elseif (str_starts_with($img, 'data:image/png;base64,')) {
+            $img = str_replace('data:image/png;base64,', '', $img); 
+            $ext = '.png';
+        }
+        $img = str_replace(' ', '+', $img);
+        $data = base64_decode($img);
+        $file = TESTIMONIAL_IMAGE_DIRECTORY . 'img_' . $_SESSION['customer_id'] . $ext;
 
-   if (strpos($_POST['tm_img'], 'data:image') === 0) {
-                $img = $_POST['tm_img'];
-   
-                if (strpos($img, 'data:image/jpeg;base64,') === 0) {
-                $img = str_replace('data:image/jpeg;base64,', '', $img);  
-                $ext = '.jpg';
-                }
-                if (strpos($img, 'data:image/png;base64,') === 0) {
-                $img = str_replace('data:image/png;base64,', '', $img); 
-                $ext = '.png';
-                }
-   
-                $img = str_replace(' ', '+', $img);
-                $data = base64_decode($img);
-                $file = TESTIMONIAL_IMAGE_DIRECTORY . 'img_' . $_SESSION['customer_id'] . $ext;
-                
-     if (file_put_contents(DIR_WS_IMAGES . $file, $data)) {
-      $messageStack->add('new_avatar', 'The image was saved', 'success');
-      //update customer 
-      $tm_query = "UPDATE " . TABLE_CUSTOMERS . "
-                 SET tm_avatar = '" . $file . "'
-                 WHERE customers_id = :customer_id:";
-         $tm_query = $db->bindVars($tm_query, ':customer_id:', (int)$_SESSION['customer_id'], 'integer');
-        $db->Execute($tm_query);
-      
-  } else {
-      $messageStack->add('new_avatar', 'The image could not be saved' , 'error');
-  } 
-             
-            } 
+        if (file_put_contents(DIR_WS_IMAGES . $file, $data)) {
+            $messageStack->add('new_avatar', 'The image was saved', 'success');
+            //update customer 
+            $tm_query =
+                "UPDATE " . TABLE_CUSTOMERS . "
+                    SET tm_avatar = '" . $file . "'
+                  WHERE customers_id = :customer_id:";
+            $tm_query = $db->bindVars($tm_query, ':customer_id:', (int)$_SESSION['customer_id'], 'integer');
+            $db->Execute($tm_query, 1);
+        } else {
+            $messageStack->add('new_avatar', 'The image could not be saved' , 'error');
+        } 
+    } 
 }
 
-
-$avatar_query = "SELECT tm_avatar
-             FROM " . TABLE_CUSTOMERS . "
-             WHERE customers_id = :customersID";
-
+$avatar_query = "SELECT tm_avatar FROM " . TABLE_CUSTOMERS . " WHERE customers_id = :customersID";
 $avatar_query = $db->bindVars($avatar_query, ':customersID', $_SESSION['customer_id'], 'integer');
-$tm_result = $db->Execute($avatar_query);
+$tm_result = $db->Execute($avatar_query, 1);
 $tm_avatar = $tm_result->fields['tm_avatar'];
+unset($tm_result);
 
- // This should be last line of the script:
-  $zco_notifier->notify('NOTIFY_HEADER_END_AVATAR');
+// This should be last line of the script:
+$zco_notifier->notify('NOTIFY_HEADER_END_AVATAR');

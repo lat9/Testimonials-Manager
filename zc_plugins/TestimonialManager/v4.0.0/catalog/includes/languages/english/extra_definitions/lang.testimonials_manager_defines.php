@@ -2,6 +2,8 @@
 /**
  * @version $Id: Testimonials_Manager.php v3.0 10-14-2022 davewest $
  *
+ * Last updated: v4.0.0
+ *
  * cowboygeek template lang.testimonials_manager_defines.php
  */
  
@@ -25,7 +27,7 @@ $define = [
     'NAME_SEPARATOR' => '&nbsp;&mdash;&nbsp;',
     'TESTIMONIALS_MANAGER_READ_MORE' => 'Read More ->',
     'TESTIMONIALS_SUBMIT_THANKS' => '<h3>Thank you for submitting a testimonial!</h3>',
-    'TESTIMONIALS_SUBMIT_MESSAGE' => '<p>Your testimonial will be active as soon as our store manager reviews it.? If you have any questions regarding your testimonial, please contact us.</p><br /><h4>Thanks Again, we look forward to serving you in the future.</h4>',
+    'TESTIMONIALS_SUBMIT_MESSAGE' => '<p>Your testimonial will be active as soon as our store manager reviews it.? If you have any questions regarding your testimonial, please contact us.</p><br><h4>Thanks Again, we look forward to serving you in the future.</h4>',
 ];
 
 return $define;

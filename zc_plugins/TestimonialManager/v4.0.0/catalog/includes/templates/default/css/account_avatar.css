@@ -4,20 +4,20 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Testimonials_Manager.php v2.0 11-14-2018 davewest $
  */
-
 * {
   box-sizing: border-box;
-} 
-
-.messageStackSuccess {background-color:#99ff99;color:#000;border:1px solid #000;border-radius: 3px;}
+}
 
 /*round image*/
 img.rounded {
-  object-fit: cover;
-  border-radius: 50%;
-  height: 60px;
-  width: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+    height: 60px;
+    width: 60px;
 }
+
+#left-box {width:250px; float:left; margin:1em;}
+#right-box {max-height:650px; float:left; margin:1em;}
 
 /* file upload button */
 .btn-file {font-size:1em;text-align:center;}
