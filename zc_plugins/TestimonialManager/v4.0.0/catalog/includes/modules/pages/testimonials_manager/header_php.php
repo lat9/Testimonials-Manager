@@ -37,7 +37,9 @@ if ($action !== '') {
     $tm_id = $id; 
     $tmcookie_na = 'cw' . $tm_id;
 
-    if (!isset($_COOKIE[$tmcookie_na])) {
+    if (isset($_COOKIE[$tmcookie_na])) {
+        zen_redirect(zen_href_link(FILENAME_TESTIMONIALS_MANAGER, 'testimonials_id=' . $tm_id, $request_type));
+    } else {
         switch ($action) {
             case 'helpyes': 
                 $tmv_yes = $db->Execute("SELECT * FROM " . TABLE_TESTIMONIALS_MANAGER . " WHERE testimonials_id = " . (int)$tm_id . " LIMIT 1"); 
@@ -66,23 +68,24 @@ if ($action !== '') {
             $path = '/';
         }
         $path = (defined('CUSTOM_COOKIE_PATH')) ? CUSTOM_COOKIE_PATH : $path;
-        $domainPrefix = (!defined('SESSION_ADD_PERIOD_PREFIX') || SESSION_ADD_PERIOD_PREFIX == 'True') ? '.' : '';
+
+        $domainPrefix = (!defined('SESSION_ADD_PERIOD_PREFIX') || SESSION_ADD_PERIOD_PREFIX === 'True') ? '.' : '';
         if (filter_var($cookieDomain, FILTER_VALIDATE_IP)) {
             $domainPrefix = '';
-            $secureFlag = (ENABLE_SSL === 'true' && str_starts_with(HTTP_SERVER, 'https:') && str_starts_with(HTTPS_SERVER, 'https:')) || (ENABLE_SSL === 'false' && str_starts_with(HTTP_SERVER, 'https:'));
+        }
 
-            $samesite = (defined('COOKIE_SAMESITE')) ? COOKIE_SAMESITE : 'lax';
-            if (!in_array($samesite, ['lax', 'strict', 'none'])) {
-                $samesite = 'lax';
-            }
+        $secureFlag = (ENABLE_SSL === 'true' && str_starts_with(HTTP_SERVER, 'https:') && str_starts_with(HTTPS_SERVER, 'https:')) || (ENABLE_SSL === 'false' && str_starts_with(HTTP_SERVER, 'https:'));
 
-            /*  set cookie parameters   */
-            $tmcookie_val = $tm_id . '%' . $tmRating;
-            setcookie($tmcookie_na, $tmcookie_val, time() + (86400 * 5), $path, (!empty($cookieDomain) ? $domainPrefix . $cookieDomain : ''), $secureFlag);  //86400 = 1 day
+        $samesite = (defined('COOKIE_SAMESITE')) ? COOKIE_SAMESITE : 'lax';
+        if (!in_array($samesite, ['lax', 'strict', 'none'])) {
+            $samesite = 'lax';
+        }
 
-            zen_redirect(zen_href_link(FILENAME_TESTIMONIALS_MANAGER, 'testimonials_id=' . $tm_id, $request_type)); 
-    } else {
-        zen_redirect(zen_href_link(FILENAME_TESTIMONIALS_MANAGER, 'testimonials_id=' . $tm_id, $request_type));
+        /*  set cookie parameters   */
+        $tmcookie_val = $tm_id . '%' . $tmRating;
+        setcookie($tmcookie_na, $tmcookie_val, time() + (86400 * 5), $path, (!empty($cookieDomain) ? $domainPrefix . $cookieDomain : ''), $secureFlag);  //86400 = 1 day
+
+        zen_redirect(zen_href_link(FILENAME_TESTIMONIALS_MANAGER, 'testimonials_id=' . $tm_id, $request_type)); 
     }
 }
 

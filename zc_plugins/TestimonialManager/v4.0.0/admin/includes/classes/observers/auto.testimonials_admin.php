@@ -11,7 +11,7 @@ if (!defined('IS_ADMIN_FLAG') || IS_ADMIN_FLAG !== true) {
 use Zencart\Traits\InteractsWithPlugins;
 use Zencart\Traits\ObserverManager;
 
-class zcObserverTestimonialsAdmin extends
+class zcObserverTestimonialsAdmin
 {
     use ObserverManager;
     use InteractsWithPlugins;

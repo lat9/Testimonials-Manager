@@ -35,39 +35,39 @@ class ScriptedInstaller extends ScriptedInstallBase
 
                 ('Testimonial Title Minimum Length', 'ENTRY_TESTIMONIALS_TITLE_MIN_LENGTH', '2', 'Minimum length of Testimonial title.', $cgi, 2, NOW(), NULL, NULL, NULL),
 
-                ('Testimonial Text Minimum Length',' ENTRY_TESTIMONIALS_TEXT_MIN_LENGTH', '10', 'Minimum length of Testimonial description.', $cgi, 3, NOW(), NULL, NULL, NULL),
+                ('Testimonial Text Minimum Length', 'ENTRY_TESTIMONIALS_TEXT_MIN_LENGTH', '10', 'Minimum length of Testimonial description.', $cgi, 3, NOW(), NULL, NULL, NULL),
 
                 ('Testimonial Contact Name Minimum Length', 'ENTRY_TESTIMONIALS_CONTACT_NAME_MIN_LENGTH', '2', 'Minimum length of Testimonial contact name.', $cgi, 4, NOW(), NULL, NULL, NULL),
 
-                ('Display Truncated Testimonials in Sidebox', 'DISPLAY_TESTIMONIALS_MANAGER_TRUNCATED_TEXT', 'true', 'Display truncated text in sidebox', $cgi, 5, NOW(), NULL, 'zen_cfg_select_option([''true'',''false''], ', NULL),
+                ('Display Truncated Testimonials in Sidebox', 'DISPLAY_TESTIMONIALS_MANAGER_TRUNCATED_TEXT', 'true', 'Display truncated text in sidebox', $cgi, 5, NOW(), NULL, 'zen_cfg_select_option([''true'', ''false''], ', NULL),
 
                 ('Length of truncated testimonials to display', 'TESTIMONIALS_MANAGER_DESCRIPTION_LENGTH', '150','If Display Truncated Testimonials in Sidebox is true - set the amount of characters to display from the Testimonials in the Testimonials Manager sidebox.', $cgi, 6, NOW(), NULL, NULL, NULL),
 
                 ('Number of Testimonials to display on all testimonials page', 'MAX_DISPLAY_TESTIMONIALS_MANAGER_ALL_TESTIMONIALS', '5', 'Set the number of testimonials to display on the all testimonials page.', $cgi, 7, NOW(), NULL, NULL, NULL),
 
-                ('Display Date Published on Testimonials page', 'DISPLAY_TESTIMONIALS_DATE_PUBLISHED', 'true', 'Display date published on testimonials page', $cgi, 8, NOW(), NULL, 'zen_cfg_select_option([''true'',''false''], ', NULL),
+                ('Display Date Published on Testimonials page', 'DISPLAY_TESTIMONIALS_DATE_PUBLISHED', 'true', 'Display date published on testimonials page', $cgi, 8, NOW(), NULL, 'zen_cfg_select_option([''true'', ''false''], ', NULL),
 
-                ('Display View All Testimonials Link In Sidebox', 'DISPLAY_ALL_TESTIMONIALS_TESTIMONIALS_MANAGER_LINK', 'true', 'Display View All Testimonials Link In Sidebox', $cgi, 9, NOW(), NULL, 'zen_cfg_select_option([''true'',''false''], ', NULL),
+                ('Display View All Testimonials Link In Sidebox', 'DISPLAY_ALL_TESTIMONIALS_TESTIMONIALS_MANAGER_LINK', 'true', 'Display View All Testimonials Link In Sidebox', $cgi, 9, NOW(), NULL, 'zen_cfg_select_option([''true'', ''false''], ', NULL),
 
-                ('Display Add New Testimonial Link In Sidebox', 'DISPLAY_ADD_TESTIMONIAL_LINK', 'true', 'Display Add New Testimonial Link In Sidebox', $cgi, 10, NOW(), NULL, 'zen_cfg_select_option([''true'',''false''], ', NULL),
+                ('Display Add New Testimonial Link In Sidebox', 'DISPLAY_ADD_TESTIMONIAL_LINK', 'true', 'Display Add New Testimonial Link In Sidebox', $cgi, 10, NOW(), NULL, 'zen_cfg_select_option([''true'', ''false''], ', NULL),
 
                 ('Testimonial Image Width', 'TESTIMONIAL_IMAGE_WIDTH', '80', 'Set the Width of the Testimonial Image', $cgi, 11, NOW(), NULL, NULL, NULL),
 
                 ('Testimonial Image Height', 'TESTIMONIAL_IMAGE_HEIGHT', '80', 'Set the Height of the Testimonial Image', $cgi, 12, NOW(), NULL, NULL, NULL),
 
-                ('Avatar Image Directory', 'TESTIMONIAL_IMAGE_DIRECTORY', 'avatars/', 'Set the Directory for the Testimonial Image', $cgi, 13, NOW(), NULL, NULL, NULL),
+                ('Avatar Image Directory', 'TESTIMONIAL_IMAGE_DIRECTORY', 'avatars/', 'Set the Directory for the Testimonial Image, relative to the <code>/images</code> directory.', $cgi, 13, NOW(), NULL, NULL, NULL),
 
-                ('Image upload Directory', 'TM_UPLOAD_DIRECTORY', 'uploads/', 'Set the Directory for the Testimonial file uplads.', $cgi, 14, NOW(), NULL, NULL, NULL),
+                ('Image upload Directory', 'TM_UPLOAD_DIRECTORY', 'uploads/', 'Set the Directory for the Testimonial file uploads, relative to the <code>/images</code> directory.', $cgi, 14, NOW(), NULL, NULL, NULL),
 
-                ('Display Submit Testimonial Page', 'TM_DISPLAY_SUBMIT', 'on', 'Display Submit Testimonial page. disable=off enabled=on', $cgi, 15, NOW(), NULL, 'zen_cfg_select_option([''on'',''off''], ', NULL),
+                ('Display Submit Testimonial Page', 'TM_DISPLAY_SUBMIT', 'on', 'Display Submit Testimonial page. disable=off enabled=on', $cgi, 15, NOW(), NULL, 'zen_cfg_select_option([''on'', ''off''], ', NULL),
 
-                ('Display upload image field in add testimonials?', 'DISPLAY_ADD_IMAGE', 'on', 'Display upload image field in add testimonials on = displayed, off = not displayed', $cgi, 16, NOW(), NULL, 'zen_cfg_select_option([''on'',''off''], ', NULL),
+                ('Display upload image field in add testimonials?', 'DISPLAY_ADD_IMAGE', 'on', 'Display upload image field in add testimonials on = displayed, off = not displayed', $cgi, 16, NOW(), NULL, 'zen_cfg_select_option([''on'', ''off''], ', NULL),
 
-                ('Only registered customers may submit a testimonial', 'REGISTERED_TESTIMONIAL', 'true', 'Only registered customers may submit a testimonial', $cgi, 17, NOW(), NULL, 'zen_cfg_select_option([''true'',''false''], ', NULL),
+                ('Only registered customers may submit a testimonial', 'REGISTERED_TESTIMONIAL', 'true', 'Only registered customers may submit a testimonial', $cgi, 17, NOW(), NULL, 'zen_cfg_select_option([''true'', ''false''], ', NULL),
 
-                ('Testimonial - Show Store Name and Address', 'TESTIMONIAL_STORE_NAME_ADDRESS', 'true', 'Include Store Name and Address', $cgi, 18, NOW(), NULL, 'zen_cfg_select_option([''true'',''false''], ', NULL),
+                ('Testimonial - Show Store Name and Address', 'TESTIMONIAL_STORE_NAME_ADDRESS', 'true', 'Include Store Name and Address', $cgi, 18, NOW(), NULL, 'zen_cfg_select_option([''true'', ''false''], ', NULL),
 
-                ('Define Testimonial','DEFINE_TESTIMONIAL_STATUS','1','Enable the Defined Testimonial Text?<br>0= Link ON, Define Text OFF<br>1= Link ON, Define Text ON<br>2= Link OFF, Define Text ON<br>3= Link OFF, Define Text OFF', $cgi, 19, NOW(), NULL, 'zen_cfg_select_option(array(''0'',''1'',''2'',''3''), ', NULL),
+                ('Define Testimonial','DEFINE_TESTIMONIAL_STATUS', '1', 'Enable the Defined Testimonial Text?<br>0= Link ON, Define Text OFF<br>1= Link ON, Define Text ON<br>2= Link OFF, Define Text ON<br>3= Link OFF, Define Text OFF', $cgi, 19, NOW(), NULL, 'zen_cfg_select_option(array(''0'', ''1'', ''2'', ''3''), ', NULL),
 
                 ('Testimonial Text Maximum Length', 'ENTRY_TESTIMONIALS_TEXT_MAX_LENGTH', '1000', 'Maximum length of Testimonial description.', $cgi, 20, NOW(), NULL, NULL, NULL)";
  
@@ -113,7 +113,7 @@ class ScriptedInstaller extends ScriptedInstallBase
             );
             
             $sql =
-                "INSERT INTO " . $table_name . "
+                "INSERT INTO " . $this->tableName . "
                     (`language_id`, `testimonials_title`, `testimonials_name`, `testimonials_image`, `testimonials_html_text`, `testimonials_mail`, `status`, `date_added`, `tm_rating`, `tm_feedback`, `tm_contact_user`, `tm_contact_phone`, `tm_gen_info`, `tm_privacy_conditions`, `helpful_yes`, `helpful_no`, `tm_make_public`, `testimonials_upimg`)
                  VALUES
                     (1, 'About CowboyGeek', 'Dave', 'avatars/cbgdave.png', 'I\'m Dave, I\'m basically not the normal saddler. I\'ve been around horses all my life, training, trail riding so on. I had to make allot of my own gear that I used and started about 15 years ago making things for other folk. That\'s about where normal stops. I make things I need and can not find anywhere else. I also got into computers before they was common home PC’s… back before Windows came out we had to code our own games.\r\n\r\nYou never know what you may find here!', 'dave@cowboygeek.com', 1, '2019-04-09 22:44:32', 5, '', 'email', '', NULL, 1, 10, 8, 'yes', 'uploads/copper2.jpg'),
@@ -123,6 +123,13 @@ class ScriptedInstaller extends ScriptedInstallBase
             $this->executeInstallerSql($sql);
         }
 
+        //modify customer table for avatars, add a default avatar
+        if (!$sniffer->field_exists(TABLE_CUSTOMERS,'tm_avatar')) {
+            $this->executeInstallerSql(
+                "ALTER TABLE " . TABLE_CUSTOMERS . "
+                   ADD COLUMN tm_avatar VARCHAR(255) NOT NULL DEFAULT ''"
+            );
+        }
         return parent::executeInstall();
     }
 
@@ -195,14 +202,14 @@ class ScriptedInstaller extends ScriptedInstallBase
 
     private function addFieldIfNotExists(string $field_name, string $default_value): void
     {
-        if ($this->sniffer->field_exists($this->tableName, $field_name) {
+        if ($this->sniffer->field_exists($this->tableName, $field_name)) {
             return;
         }
         
         $this->executeInstallerSql("ALTER TABLE " . $this->tableName . " ADD COLUMN $field_name $default_value");
     }
 
-    private function changeFieldDefault(string $field_name, $string $default_value): void
+    private function changeFieldDefault(string $field_name, string $default_value): void
     {
         $this->executeInstallerSql("ALTER TABLE " . $this->tableName . " MODIFY $field_name $default_value");
     }
