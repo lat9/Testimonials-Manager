@@ -16,15 +16,17 @@
     <div class="center">
 <?php
 /** display shop total reviews */
-include $template->get_template_dir('/tpl_tm_total_reviews.php', DIR_WS_TEMPLATE, $current_page_base, 'templates') . '/tpl_tm_total_reviews.php');
+include $template->get_template_dir('/tpl_tm_total_reviews.php', DIR_WS_TEMPLATE, $current_page_base, 'templates') . '/tpl_tm_total_reviews.php';
 ?>
     </div>
 <?php
 $all_get_params = zen_get_all_get_params(['page', 'info', 'x', 'y', 'main_page']);
-if ($layoutType === 'mobile') {
+if (($layoutType ?? '') === 'mobile') {
     if ($testimonials_split->number_of_rows > 0 && (PREV_NEXT_BAR_LOCATION === '1' || PREV_NEXT_BAR_LOCATION === '3')) {
 ?>
-    <div id="allProductsListingTopNumber" class="navSplitPagesResult back"><?= $testimonials_split->display_count(TEXT_DISPLAY_NUMBER_OF_TESTIMONIALS_MANAGER_ITEMS) ?></div>
+    <div id="allProductsListingTopNumber" class="navSplitPagesResult back">
+        <?= $testimonials_split->display_count(TEXT_DISPLAY_NUMBER_OF_TESTIMONIALS_MANAGER_ITEMS) ?>
+    </div>
     <div id="allProductsListingTopLinks" class="navSplitPagesLinks forward">
         <?= TEXT_RESULT_PAGE . $testimonials_split->display_mobile_links($max_display_page_links, $all_get_params, $paginateAsUL) ?>
     </div>
