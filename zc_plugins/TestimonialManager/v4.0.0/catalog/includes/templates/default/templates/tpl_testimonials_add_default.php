@@ -25,7 +25,7 @@ include $template->get_template_dir('/tpl_tm_total_reviews.php', DIR_WS_TEMPLATE
 <?php
 if (TESTIMONIAL_STORE_NAME_ADDRESS === 'true') {
 ?>
-    <address><?= nl2br(STORE_NAME_ADDRESS, true) ?></address>
+    <address><?= nl2br(STORE_NAME_ADDRESS, false) ?></address>
     <br class="clearBoth">
 <?php
 }
@@ -74,11 +74,13 @@ for ($i = 0; $i <= 5; $i++) {
 ?>
                 <div id="star-rating">
 <?php
-foreach ($stars as $rating_value => $star) {
+for ($rating_value = 5; $rating_value >= 0; $rating_value--) {
+    $star = $stars[$rating_value];
+    $rating_title = constant("TEXT_RATING_$rating_value");
 ?>
                 <div class="custom-control custom-radio custom-control-inline">
-                    <?php echo zen_draw_radio_field('rating', (string)$rating_value, $rating, 'id="rating-' . $rating_value . '" class="custom-control-input"'); ?>
-                    <label class="custom-control-label rating" for="rating-<?= $rating_value ?>"><?= $star ?></label>
+                    <?= zen_draw_radio_field('rating', (string)$rating_value, $rating === $rating_value, 'id="rating-' . $rating_value . '" class="custom-control-input"'); ?>
+                    <label class="custom-control-label rating" for="rating-<?= $rating_value ?>" title="<?= $rating_title ?>"><?= $star ?></label>
                 </div>
 <?php
 }
@@ -91,8 +93,8 @@ foreach ($stars as $rating_value => $star) {
                 <div class="switch-field">
 <!-- online shopping experience switch_1 //-->      
                     <div class="switch-wrap">
-                        <?= zen_draw_radio_field('feedback', LABEL_FEEDBACK_1, '', 'id="switch-1"') .
-                            '<label for="switch-1">' . LABEL_FEEDBACK_1 . '</label>' ?>
+                        <?= zen_draw_radio_field('feedback', LABEL_FEEDBACK_1, '', 'id="switch-1"') ?>
+                        <label for="switch-1"><?= LABEL_FEEDBACK_1 ?></label>
                         <div class="reveal-if-active go-up"> 
                             <div>
                                 <?= zen_draw_input_field('testimonials_name', $testimonials_name, 'id="tm-name1" title="' . ALT_FIELD_NAME . '" class="require-if-active resizeField" data-require-pair="#switch_1"') ?>
@@ -121,10 +123,11 @@ if (!zen_is_logged_in() || zen_in_guest_checkout()) {
                                 <div>
                                     <?= TEXT_FIELD_1_QUESTION1 ?>
                                     <br>
-                                    <?= zen_draw_radio_field('find-1', 'yes', '', 'id="find-yes-1"') .
-                                    '<label for="find-yes-1" class="inputLabel">' . TEXT_YES . '</label>' .
-                                    zen_draw_radio_field('find-1', 'no', '', 'id="find-no-1"') .
-                                    '<label for="find-no-1" class="inputLabel">' . TEXT_NO . '</label>' ?>
+                                    <?= zen_draw_radio_field('find-1', 'yes', '', 'id="find-yes-1"') ?>
+                                    <label for="find-yes-1" class="inputLabel"><?= TEXT_YES ?></label>
+
+                                    <?= zen_draw_radio_field('find-1', 'no', '', 'id="find-no-1"') ?>
+                                    <label for="find-no-1" class="inputLabel"><?= TEXT_NO ?></label>
                                 </div>
                             </div>
 
@@ -138,8 +141,8 @@ if (!zen_is_logged_in() || zen_in_guest_checkout()) {
        
 <!-- online order experience switch_2 //-->
                     <div class="switch-wrap">
-                        <?= zen_draw_radio_field('feedback', LABEL_FEEDBACK_2, '', 'id="switch_2"') .
-                            '<label for="switch_2">' . LABEL_FEEDBACK_2 . '</label>' ?>
+                        <?= zen_draw_radio_field('feedback', LABEL_FEEDBACK_2, '', 'id="switch_2"') ?>
+                        <label for="switch_2"><?= LABEL_FEEDBACK_2 ?></label>
                         <div class="reveal-if-active go-up"> 
                             <div>
                                 <?= zen_draw_input_field('testimonials_name', $testimonials_name, 'id="tm-name2" title="' . ALT_FIELD_NAME . '" class="require-if-active resizeField" data-require-pair="#switch_2"') ?>
@@ -168,10 +171,11 @@ if (!zen_is_logged_in() || zen_in_guest_checkout()) {
                                 <div>
                                     <?= TEXT_FIELD_2_QUESTION1 ?>
                                     <br>
-                                    <?= zen_draw_radio_field('order1', 'yes', $ordered, 'id="order_yes"') .
-                                        '<label for="order_yes" class="inputLabel">' . TEXT_YES . '</label>' .
-                                        zen_draw_radio_field('order1', 'no', $ordered, 'id="order_no"') .
-                                        '<label for="order_no" class="inputLabel">' . TEXT_NO . '</label>' ?>
+                                    <?= zen_draw_radio_field('order1', 'yes', $ordered, 'id="order_yes"') ?>
+                                    <label for="order_yes" class="inputLabel"><?= TEXT_YES ?></label>
+
+                                    <?= zen_draw_radio_field('order1', 'no', $ordered, 'id="order_no"') ?>
+                                    <label for="order_no" class="inputLabel"><?= TEXT_NO ?></label>
                                 </div>
                             </div>
 
@@ -185,8 +189,8 @@ if (!zen_is_logged_in() || zen_in_guest_checkout()) {
                     </div>
 <!-- Mobile shopping experience switch_3 //-->
                     <div class="switch-wrap">
-                        <?= zen_draw_radio_field('feedback', LABEL_FEEDBACK_3, '', 'id="switch_3"') .
-                            '<label for="switch_3">' . LABEL_FEEDBACK_3 . '</label>' ?>
+                        <?= zen_draw_radio_field('feedback', LABEL_FEEDBACK_3, '', 'id="switch_3"') ?>
+                        <label for="switch_3"><?= LABEL_FEEDBACK_3 ?></label>
                         <div class="reveal-if-active go-up"> 
                             <div>
                                 <?= zen_draw_input_field('testimonials_name', $testimonials_name, ' id="tm-name3" title="' . ALT_FIELD_NAME . '" class="require-if-active resizeField" data-require-pair="#switch_3"') ?>
@@ -232,8 +236,8 @@ if (!zen_is_logged_in() || zen_in_guest_checkout()) {
                     </div>
 <!-- Store Experience switch_4 //-->
                     <div class="switch-wrap">
-                        <?= zen_draw_radio_field('feedback', LABEL_FEEDBACK_4, '', 'id="switch_4"') .
-                            '<label for="switch_4">' . LABEL_FEEDBACK_4 . '</label>' ?>
+                        <?= zen_draw_radio_field('feedback', LABEL_FEEDBACK_4, '', 'id="switch_4"') ?>
+                        <label for="switch_4"><?= LABEL_FEEDBACK_4 ?></label>
                         <div class="reveal-if-active go-up"> 
                             <div>
                                 <?= zen_draw_input_field('testimonials_name', $testimonials_name, 'id="tm-name4" title="' . ALT_FIELD_NAME . '" class="require-if-active resizeField" data-require-pair="#switch_4"') ?>
@@ -262,20 +266,20 @@ if (!zen_is_logged_in() || zen_in_guest_checkout()) {
                             <div>
                                 <div class="switch-title"><?= TEXT_FIELD_4_QUESTION1 ?></div>
                                 <div id="feedback-about">
-                                    <?= zen_draw_radio_field('feedback_about', '2', '', 'id="store_feedback_1"') .
-                                        '<label for="store_feedback_1" title="' . TEXT_FIELD_4_QUESTION2 . '">' .
-                                            TEXT_FIELD_4_QUESTION2 .
-                                        '</label>' ?>
+                                    <?= zen_draw_radio_field('feedback_about', TEXT_FIELD_4_QUESTION2, '', 'id="store_feedback_1"') ?>
+                                    <label class="center text-center" for="store_feedback_1" title="<?= TEXT_FIELD_4_QUESTION2 ?>">
+                                        <?= TEXT_FIELD_4_QUESTION2 ?>
+                                    </label>
 
-                                    <?= zen_draw_radio_field('feedback_about', '3', '', 'id="store_feedback_2"') .
-                                        '<label for="store_feedback_2" title="' . TEXT_FIELD_4_QUESTION3 . '">' . 
-                                            TEXT_FIELD_4_QUESTION3 .
-                                        '</label>' ?>
+                                    <?= zen_draw_radio_field('feedback_about', TEXT_FIELD_4_QUESTION3, '', 'id="store_feedback_2"') ?>
+                                    <label class="center text-center" for="store_feedback_2" title="<?= TEXT_FIELD_4_QUESTION3 ?>">
+                                        <?= TEXT_FIELD_4_QUESTION3 ?>
+                                    </label>
 
-                                    <?= zen_draw_radio_field('feedback_about', '4', '', 'id="store_feedback_3"') .
-                                    '<label for="store_feedback_3" title="' . TEXT_FIELD_4_QUESTION4 . '">' .
-                                        TEXT_FIELD_4_QUESTION4 .
-                                    '</label>' ?>
+                                    <?= zen_draw_radio_field('feedback_about', TEXT_FIELD_4_QUESTION4, '', 'id="store_feedback_3"') ?>
+                                    <label class="center text-center" for="store_feedback_3" title="<?= TEXT_FIELD_4_QUESTION4 ?>">
+                                        <?= TEXT_FIELD_4_QUESTION4 ?>
+                                    </label>
                                 </div>
                             </div>
 
@@ -288,7 +292,8 @@ if (!zen_is_logged_in() || zen_in_guest_checkout()) {
                     </div>
  <!-- Other feedback switch_5 //-->
                     <div class="switch-wrap">
-                        <?= zen_draw_radio_field('feedback', LABEL_FEEDBACK_6, '', 'id="switch_5"') . '<label for="switch_5">' . LABEL_FEEDBACK_6 . '</label>' ?>
+                        <?= zen_draw_radio_field('feedback', LABEL_FEEDBACK_6, '', 'id="switch_5"') ?>
+                        <label for="switch_5"><?= LABEL_FEEDBACK_6 ?></label>
                         <div class="reveal-if-active go-up"> 
                             <div>
                                 <?= zen_draw_input_field('testimonials_name', $testimonials_name, ' id="tm-name5" title="' . ALT_FIELD_NAME . '" class="require-if-active resizeField" data-require-pair="#switch_5"') ?>
@@ -321,37 +326,37 @@ if (!zen_is_logged_in() || zen_in_guest_checkout()) {
                         </div>
                     </div>
 
-                    <div class="reveal">
+                    <div class="reveal center text-center">
                         <div class="switch-footer">
                             <div class="switch-title"><?= TEXT_FIELD_CONTACT ?></div>
-                            <input type="radio" id="switch_email" name="contact_3" value="email">
-                            <label for="switch_email" class="inputLabel"><?= TEXT_FIELD_CONTACT_EMAIL ?></label> 
-                            <input type="radio" id="switch_no" name="contact_3" value="no" checked>
-                            <label for="switch_no" class="inputLabel"><?= TEXT_NO ?></label>
-                            <br class="clearBoth">
-                            <div>
-                                <input type="radio" id="switch_phone" name="contact_3" value="phone">
-                                <label for="switch_phone" class="inputLabel"><?= TEXT_FIELD_CONTACT_PHONE ?></label>
-                                <div>
-                                    <div><?= TEXT_FIELD_PHONE_NUMBER ?></div>
-                                    <input type="tel" name="telephone" id="telephone" class="require-if-active resizeField" placeholder="123-123-1234" title="<?= ALT_FIELD_PHONE_NUMBER ?>" data-require-pair="#switch_phone">
-                                </div>
+                            <div class="footer-items">
+                                <?= zen_draw_radio_field('contact_3', 'email', '', 'id="switch_email"') ?>
+                                <label for="switch_email" class="inputLabel center text-center"><?= TEXT_FIELD_CONTACT_EMAIL ?></label>
+
+                                <?= zen_draw_radio_field('contact_3', 'no', '', 'id="switch_no" checked') ?>
+                                <label for="switch_no" class="inputLabel center text-center"><?= TEXT_NO ?></label>
+
+                                <?= zen_draw_radio_field('contact_3', 'phone', '', 'id="switch_phone"') ?>
+                                <label for="switch_phone" class="inputLabel center text-center"><?= TEXT_FIELD_CONTACT_PHONE ?></label>
                             </div>
+                            <div><?= TEXT_FIELD_PHONE_NUMBER ?></div>
+                            <?= zen_draw_input_field('telephone', $user_phone, 'id="telephone" title="' . ALT_FIELD_PHONE_NUMBER . '" placeholder="123-123-1234"', 'tel') ?>
                         </div>
-                        <br class="clearBoth"> 
-                        <br>
+
                         <div class="switch-footer">
                             <div class="switch-title"><?= TEXT_FIELD_PERMISSION ?></div>
-                            <?= zen_draw_radio_field('make_public', 'yes', '', 'id="make_public_yes" checked ') ?>
-                             <label for="make_public_yes" class="inputLabel"><?= TEXT_YES ?></label>
-                            <?= zen_draw_radio_field('make_public', 'no', '', 'id="make_public_no"') ?>
-                            <label for="make_public_no" class="inputLabel"><?= TEXT_NO ?></label>
+                            <div class="footer-items">
+                                <?= zen_draw_radio_field('make_public', 'yes', '', 'id="make_public_yes" checked ') ?>
+                                 <label for="make_public_yes" class="inputLabel center text-center"><?= TEXT_YES ?></label>
+
+                                <?= zen_draw_radio_field('make_public', 'no', '', 'id="make_public_no"') ?>
+                                <label for="make_public_no" class="inputLabel center text-center"><?= TEXT_NO ?></label>
+                            </div>
                         </div> 
-                        <br class="clearBoth"> 
 <?php
 if (DISPLAY_ADD_IMAGE === 'on') {
 ?>
-                        <div class="box" id="clear-box">
+                        <div id="clear-box" class="box center text-center">
                             <p class="guidelines"><?= TEXT_FIELD_FEEDBACK_IMAGE ?></p>
                             <input type="file" name="file" id="inp_file" class="upfile upfile-1">
                             <label for="inp_file">
@@ -364,15 +369,20 @@ if (DISPLAY_ADD_IMAGE === 'on') {
                                 <input id="inp_img" name="tm_img" type="hidden" value="">
                             </div>
                         </div>
-                        <br>
-                        <div class="buttonRow center"><?= zen_image_button(BUTTON_IMAGE_DELETE, BUTTON_DELETE_ALT, ' id="file-reset" ') ?></div> 
+
+                        <div class="buttonRow center text-center">
+                            <?= zen_image_button(BUTTON_IMAGE_DELETE, BUTTON_RESET_IMAGE, 'id="file-reset"') ?>
+                        </div> 
 <script>
 function fileChange(e) { 
     document.getElementById('inp_img').value = '';
 
     var file = e.target.files[0];
  
-    if (file.type == "image/jpeg" || file.type == "image/png") {
+    if (file.type !== "image/jpeg" && file.type !== "image/png") {
+        document.getElementById('inp_file').value = ''; 
+        alert('<?= ERROR_FIELD_IMAGE ?>');
+    } else {
         var reader = new FileReader();  
         reader.onload = function(readerEvent) {
             var image = new Image();
@@ -407,9 +417,6 @@ function fileChange(e) {
             image.src = readerEvent.target.result;
         }
         reader.readAsDataURL(file);
-    } else {
-        document.getElementById('inp_file').value = ''; 
-        alert('<?= ERROR_FIELD_IMAGE ?>');  
     }
 }
 
@@ -422,7 +429,6 @@ $('#file-reset').on('click', function(e) {
    $el.unwrap();
 });
 </script>
-                        <br class="clearBoth">
 <?php
 }
 ?>
@@ -434,21 +440,21 @@ if (DISPLAY_PRIVACY_CONDITIONS === 'true') {
 ?>
                         <div class="switch-footer">
                             <div class="switch-title"><?= TEXT_PRIVACY_CONFIRM ?></div>
-                            <?= zen_draw_checkbox_field('privacy_conditions', '1',  $privacy, ' class="checky" id="privacy_left" ') . '<label for="privacy_left" class="inputLabel">Agree</label>' ?> 
+                            <?= zen_draw_checkbox_field('privacy_conditions', '1',  $privacy, 'id="privacy_left" class="checky"') ?>
+                            <label for="privacy_left" class="inputLabel"><?= TEXT_AGREE ?></label>
                         </div>
-                        <br class="clearBoth">
 <?php
 }
 ?>
                     </div>
                 </div>
 
-                <br class="clearBoth">
-                <div class="buttonRow back"><?= zen_back_link() . zen_image_button(BUTTON_IMAGE_BACK, BUTTON_BACK_ALT) . '</a>' ?></div>
-                <div class="buttonRow forward">
-                    <button class="cssButton submit_button button  button_submit_testimonials" onmouseover="this.className='cssButtonHover  button_submit_testimonials button_submit_testimonialsHover'" onmouseout="this.className='cssButton submit_button button  button_submit_testimonials'" type="submit" id="<?= $postme ?>"><?= BUTTON_TESTIMONIALS_SUBMIT_ALT ?></button>
+                <div id="button-row">
+                    <?= zen_image_button(BUTTON_IMAGE_BACK, BUTTON_BACK_ALT) ?>
+                    <button class="cssButton btn submit_button button" type="submit" id="<?= $postme ?>">
+                        <?= BUTTON_TESTIMONIALS_SUBMIT_ALT ?>
+                    </button>
                 </div>
-                <br><br>
             </div>
         </div>
 <script >

@@ -40,15 +40,17 @@ $testimonials_html_text = '';
 
 $ordered = '';
 
+$error = false; //- No errors, initially
+
 if (($_GET['action'] ?? '') === 'send') {
     //saved in database table
-    $rating = (int)($_POST['rating'] ?? ''); //stars 1-5
+    $rating = (int)($_POST['rating'] ?? ''); //stars 0-5
     $feedback = zen_db_prepare_input($_POST['feedback'] ?? ''); //label of selected group
     $testimonials_name = zen_db_prepare_input($_POST['testimonials_name'] ?? ''); //customer name
     $testimonials_mail = zen_db_prepare_input($_POST['testimonials_mail'] ?? ''); //email address 
     $testimonials_title = zen_db_prepare_input($_POST['testimonials_title'] ?? ''); //title default or user
     $testimonials_html_text = zen_db_prepare_input(strip_tags($_POST['testimonials_html_text'] ?? '')); //message        
-    $testimonials_avatar = zen_db_prepare_input($_POST['avatar_register'] ?? '');
+
     $make_public = zen_db_prepare_input($_POST['make_public'] ?? ''); //yes, no
     //footer lines
     $contact_user = zen_db_prepare_input($_POST['contact_3'] ?? '');    //email, no, phone 
@@ -68,13 +70,6 @@ if (($_GET['action'] ?? '') === 'send') {
     $screen_size = zen_db_prepare_input($_POST['screen_size'] ?? '');
     $feedback_about = !empty($_POST['feedback_about']) ? zen_db_prepare_input($_POST['feedback_about']) : ''; //Associate feedback, In-Store experience, Associate feedback
 
-    //format image for storage/use helps to prevent image hacks
-    $base_image = substr($testimonials_avatar, strrpos($testimonials_avatar, '/') + 1); //remove all folders from name
-    $testimonials_avatar = TESTIMONIAL_IMAGE_DIRECTORY . $base_image; //reformat with image base folder and name
-
-    //begin testing for errors
-    $error = false;
-
     // Upload when form field is filled in by user 
     $file = '';
     if (DISPLAY_ADD_IMAGE === 'on' && isset($_POST['tm_img'])) {  //on off turns on/off uploads
@@ -90,25 +85,27 @@ if (($_GET['action'] ?? '') === 'send') {
                 $error = true;
                 $messageStack->add('new_testimonial', 'Only jpg and png images are allowed.', 'error');
             }
-   
-            $img = str_replace(' ', '+', $img);
-            $data = base64_decode($img);
-            $file = TM_UPLOAD_DIRECTORY . 'img'.date("YmdHis").$ext;
-             if (file_put_contents(DIR_WS_IMAGES . $file, $data)) {
-                $messageStack->add('new_testimonial', 'The image was saved');
-            } else {
-                $error = true;
-                $messageStack->add('new_testimonial', 'The image could not be saved' , 'error');
+
+            if (!$error) {
+                $img = str_replace(' ', '+', $img);
+                $data = base64_decode($img);
+                $file = TM_UPLOAD_DIRECTORY . 'img'.date("YmdHis").$ext;
+                 if (file_put_contents(DIR_WS_IMAGES . $file, $data)) {
+                    $messageStack->add('new_testimonial', 'The image was saved');
+                } else {
+                    $error = true;
+                    $messageStack->add('new_testimonial', 'The image could not be saved' , 'error');
+                }
             }
         }
     }
 
     $gen_info = 
-        "Find what you wanted: $testimonials_wanted<br>" .
-        "Already placed an order: $ordered<br>" .
-        "Mobile device used:  $mobile_device<br>" .
-        "Mobile device name: $mobile_device_name<br>" .
-        "Screen info: $screen_size<br>" .
+        "Find what you wanted: $testimonials_wanted\n" .
+        "Already placed an order: $ordered\n" .
+        "Mobile device used:  $mobile_device\n" .
+        "Mobile device name: $mobile_device_name\n" .
+        "Screen info: $screen_size\n" .
         "In store feedback $feedback_about";
 
     if (zen_validate_email($testimonials_mail) === false) {
@@ -150,7 +147,7 @@ if (($_GET['action'] ?? '') === 'send') {
         $messageStack->add('new_testimonial', ENTRY_TELEPHONE_NUMBER_ERROR, 'error');
     }
 
-    if ($rating < 1 || $rating > 5) {
+    if ($rating < 0 || $rating > 5) {
         $error = true;
         $messageStack->add('new_testimonial', TESTIMONIAL_RATING, 'error');
     }
@@ -253,7 +250,7 @@ if (($_GET['action'] ?? '') === 'send') {
     }
 } // eof form submit
 
-if (zen_is_logged_in() && !zen_in_guest_checkout()) {  //!zen_is_logged_in())
+if (!$error && zen_is_logged_in() && !zen_in_guest_checkout()) {
     $sql = "SELECT * FROM " . TABLE_CUSTOMERS . " WHERE customers_id = :customersID ";
     $sql = $db->bindVars($sql, ':customersID', $_SESSION['customer_id'], 'integer');
     $check_customer = $db->Execute($sql, 1);
@@ -261,29 +258,7 @@ if (zen_is_logged_in() && !zen_in_guest_checkout()) {  //!zen_is_logged_in())
     $testimonials_mail = $check_customer->fields['customers_email_address'];
     $testimonials_name = $check_customer->fields['customers_firstname'];
     $user_phone = $check_customer->fields['customers_telephone'];
-    $tm_avatar = $check_customer->fields['tm_avatar'];  //only works with user avatar installed
 }
-
-//images/avatars/at_1.png
-//get all avatars with at_ .png ONLY 
-//any avatars not name as above is not used
-//random selection of 7 to display. Spinner button would be nice.
-$dir = DIR_WS_IMAGES . TESTIMONIAL_IMAGE_DIRECTORY;  //updated to play nice
-$at_avatars = '';
-$loop = glob($dir. '{at_}*{jpg,png}', GLOB_BRACE); // look for only jpg and png *{.jpg, .png}
-
-$catchme = array_rand($loop, 7);
-
-$at_avatars .=
-    '<img src="' . $loop[$catchme[0]] . '">' .
-    '<img src="' . $loop[$catchme[1]] . '">' .
-    '<img src="' . $loop[$catchme[2]] . '">' .
-    '<img src="' . $loop[$catchme[3]] . '">' .
-    '<img src="' . $loop[$catchme[4]] . '">' .
-    '<img src="' . $loop[$catchme[5]] . '">' .
-    '<img src="' . $loop[$catchme[6]] . '"> ';
-
-// include template specific file name defines
 
 $define_page = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/html_includes/', FILENAME_DEFINE_TESTIMONIALS_ADD, 'false');
 

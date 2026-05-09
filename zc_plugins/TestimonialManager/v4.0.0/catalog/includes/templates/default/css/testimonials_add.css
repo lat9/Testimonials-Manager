@@ -10,13 +10,10 @@
 }
 
 /** for css buttons without images */
-.button, button.button, button.cssButtonHover {display:inline-block;font-size:1.3em;margin:0;padding:8px 20px;text-decoration:none;}
+.button, button.button {display:inline-block;font-size:1.3em;margin:0;padding:8px 20px;text-decoration:none;}
 button.submit_button {color:#ffffff;background:#364fb5;border:none !important;font-size: 1.3em;display: inline-block;margin:0;padding: 8px 20px;}
 button.submit_button:hover {border:none !important;font-size: 1.3em;display: inline-block;margin:0;padding: 8px 20px !important;}
-button.cssButtonHover {border:none;cursor: pointer;font-size: 1.3em;display: inline-block;margin:0;padding: 8px 20px !important;}
-
-button.submit_button:hover, button.cssButtonHover {background:#000;}
-button.cssButtonHover {color: #ffffff;}
+button.submit_button:hover {background:#000;}
 
 .pseudolink {color:rgba(0,148,0,1);font-weight:bold;font-size:1.5em;}
 .logo2{margin-top:5px;font-size:2vw;position:relative;text-align:center;line-height:2px;}
@@ -46,7 +43,7 @@ button.cssButtonHover {color: #ffffff;}
 .qtext2 {font-size:14px;color: rgb(0,0,0);font-family:arial, helvetica, sans-serif;}
 .inputLabel {max-width: 70px !important;}
 .feedbackLabel {max-width: 90px !important;}
-#feedback-about { display:flex;justify-content:center;column-gap:.5rem;}
+#feedback-about, #button-row, .footer-items { display:flex;justify-content:center;column-gap:.5rem;}
 
 /* toggle switch */
 .switch-field {font-family: "Lucida Grande", Tahoma, Verdana, sans-serif;padding: 40px;}
@@ -105,7 +102,6 @@ input[type="radio"]:checked ~ .reveal-if-active, input[type="checkbox"]:checked 
   transform: scale(1);
   overflow: visible;
 } 
-
 
 .resizeField {
    height:auto;
@@ -179,23 +175,18 @@ input:required:valid, select:required:valid, textarea:required:valid  {
     background-repeat: no-repeat;
     z-index: 3;
   }
-  
-select {background: url(../images/bc_cat_pointer_down.gif) no-repeat #fff 254px 18px;}  
-
-
 
 /* file upload button */
-
-.box label {border:none;width:50%;}
+.box label {border:none;width:50%;text-align:center;}
 
 /* file upload button */
 .btn-file {font-size:1em;text-align:center;}
-.box {text-align:center;}
-.box-preview {text-align:center;max-width: 60%;border:2px solid rgba(0,0,0,0.5);display:inline-block;overflow: hidden;}
+
+.box-preview {max-width: 60%;border:2px solid rgba(0,0,0,0.5);display:inline-block;overflow: hidden;}
 .upfile {width: 0.1px;height: 0.1px; opacity: 0;overflow: hidden;position: absolute; z-index: -1;}
 .upfile + label {max-width: 60%;font-size: 1.25rem;font-weight: 700;text-overflow: ellipsis;white-space: nowrap;cursor: pointer;display: inline-block; overflow: hidden; padding: 0.625rem 1.25rem;}
 input[type="file"] { display: none;}
-.upfile:focus + label, .upfile.has-focus + label {outline: 1px dotted #000;outline: -webkit-focus-ring-color auto 5px;}
+.upfile:focus + label, .upfile.has-focus + label {outline: 1px dotted #000;}
 .upfile + label svg {width: 1em; height: 1em;vertical-align: middle;fill: currentColor;margin-top: -0.25em;margin-right: 0.25em;}
 
 .upfile-1 + label {
@@ -208,7 +199,7 @@ input[type="file"] { display: none;}
     background-color: #722040;
 }
 
-#file-reset {cursor: pointer;}
+#file-reset {cursor: pointer;margin-bottom:.25rem;}
 
 /*round image*/
 img.rounded {
