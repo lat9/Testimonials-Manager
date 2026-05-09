@@ -35,10 +35,10 @@ if (($_GET['action'] ?? '') === 'success') {
     <div class="mainContent success"><?= TESTIMONIAL_SUCCESS ?></div>
     <div class="buttonRow back"><?= zen_back_link() . zen_image_button(BUTTON_IMAGE_BACK, BUTTON_BACK_ALT) .'</a>' ?></div>
 <?php
-} elseif (in_array(DEFINE_TESTIMONIAL_STATUS, ['1', '2']) {
+} elseif (in_array(DEFINE_TESTIMONIAL_STATUS, ['1', '2'])) {
 ?>
     <div id="pageThreeMainContent">
-        <?php require($define_page); ?>
+        <?php require $define_page; ?>
     </div>
 <?php
 }
@@ -49,38 +49,40 @@ if ($messageStack->size('new_testimonial') > 0) {
     echo $messageStack->output('new_testimonial');
 }
 ?>
-    <div class="pseudolink back"><?= FORM_REQUIRED_INFORMATION . ' ' . EXCLAMATION_TRIANGLE ?></div>
-    <br class="clearBoth">
-
     <div class="tm-wrapper"> 
         <div class="main_box">
             <div class="logo2">
                 <h2><?= TEXT_TESTIMONIALS_HEADER ?></h2>
             </div>
             <p class="questionarea"><?= TEXT_TESTIMONIALS_FEEDBACK ?></p>
-<?php
-if ($tmStatus !== 'on') {
-?>
-            <h2 class="box"><?= TEXT_CLOSED ?></h2>
-<?php
-} else {
-?>
+
             <div class="boxcontainer">
                 <div id="reviewsWriteReviewsRate"><?= TESTIMONIAL_GIVE_RATING ?></div>
-                <div class="masterdog">
-                    <div class="starspace">
-                        <input name="rating" value="1" id="startip-1" type="radio" class="angry"><label for="startip-1"></label>
-                        <input name="rating" value="2" id="startip-2" type="radio" class="okok"><label for="starip-2"></label>
-                        <input name="rating" value="3" id="startip-3" type="radio" class="good"><label for="starip-3"></label>
-                        <input name="rating" value="4" id="startip-4" type="radio" class="better"><label for="startip-4"></label>
-                        <input name="rating" value="5" id="startip-5" type="radio" class="awesome"> <label for="startip-5"></label>
-                        <span id="showme-5"><?= TEXT_RATING_5 ?></span>
-                        <span id="showme-4"><?= TEXT_RATING_4 ?></span>
-                        <span id="showme-3"><?= TEXT_RATING_3 ?></span>
-                        <span id="showme-2"><?= TEXT_RATING_2 ?></span>
-                        <span id="showme-1"><?= TEXT_RATING_1 ?></span>
-                        <span id="removeme"></span> 
-                    </div>
+<?php
+$stars = [];
+for ($i = 0; $i <= 5; $i++) {
+    $star1 = '';
+    for ($s = 1; $s <= $i; $s++) {
+        $star1 .= TM_STAR_SM_FULL;
+    }
+    $star2 = '';
+    for ($r = $i; $r <= 4; $r++) {
+        $star2 .= TM_STAR_SM_EMPTY;
+    }
+    $stars[] = $star1 . $star2;
+}
+?>
+                <div id="star-rating">
+<?php
+foreach ($stars as $rating_value => $star) {
+?>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <?php echo zen_draw_radio_field('rating', (string)$rating_value, $rating, 'id="rating-' . $rating_value . '" class="custom-control-input"'); ?>
+                    <label class="custom-control-label rating" for="rating-<?= $rating_value ?>"><?= $star ?></label>
+                </div>
+<?php
+}
+?>
                 </div>
             </div>
 
@@ -88,202 +90,232 @@ if ($tmStatus !== 'on') {
             <div class="answersection">
                 <div class="switch-field">
 <!-- online shopping experience switch_1 //-->      
-                    <div>
-                        <?= zen_draw_radio_field('feedback', LABEL_FEEDBACK_1, '', 'id="switch_1"') . '<label for="switch_1">' . LABEL_FEEDBACK_1 . '</label>' ?>
+                    <div class="switch-wrap">
+                        <?= zen_draw_radio_field('feedback', LABEL_FEEDBACK_1, '', 'id="switch-1"') .
+                            '<label for="switch-1">' . LABEL_FEEDBACK_1 . '</label>' ?>
                         <div class="reveal-if-active go-up"> 
                             <div>
-                                <?= zen_draw_input_field('testimonials_name', $testimonials_name, ' id="testimonials_name_1" pattern="^([- \w\d\u00c0-\u024f]+)$" title="' . ALT_FIELD_NAME . '" class="require-if-active resizeField" data-require-pair="#switch_1"') ?>
-                                <div class="label"><?= TEXT_TESTIMONIALS_NAME ?> </div>
+                                <?= zen_draw_input_field('testimonials_name', $testimonials_name, 'id="tm-name1" title="' . ALT_FIELD_NAME . '" class="require-if-active resizeField" data-require-pair="#switch_1"') ?>
+                                <div class="label"><?= TEXT_TESTIMONIALS_NAME ?></div>
                             </div>
 <?php
-    if (!zen_is_logged_in() || zen_in_guest_checkout()) {
+if (!zen_is_logged_in() || zen_in_guest_checkout()) {
 ?>
                             <i title="<?= TITLE_EMAIL ?>"><?= EXCLAMATION_CIRCLE ?></i>
                             <div>
-                                <?= zen_draw_input_field('testimonials_mail', $testimonials_mail, ' id="testimonials_mail" spellcheck="false" title="' . ALT_FIELD_EMAIL . '" pattern="^(([-\w\d]+)(\.[-\w\d]+)*@([-\w\d]+)(\.[-\w\d]+)*(\.([a-zA-Z]{2,5}|[\d]{1,3})){1,2})$" class="require-if-active resizeField" data-require-pair="#switch_1"', 'email')  ?>
-                                <div class="label"><?= TEXT_TESTIMONIALS_MAIL ?> </div>
+                                <?= zen_draw_input_field('testimonials_mail', $testimonials_mail, 'id="tm-email1" title="' . ALT_FIELD_EMAIL . '" class="require-if-active resizeField" data-require-pair="#switch_1"', 'email')  ?>
+                                <div class="label" for="tm-email1"><?= TEXT_TESTIMONIALS_MAIL ?> </div>
                             </div>
 <?php
-    } else {
+} else {
 ?>
                             <?= zen_draw_hidden_field('testimonials_mail', $testimonials_mail); 
-    }
+}
 ?>
                             <div>
-                                <input type="text" name="testimonials_title" value="<?= TEXT_FIELD_1_TITLE ?>" id="testimonials_title" pattern="^([- \w\d\u00c0-\u024f]+)$" title="<?= ALT_FIELD_TITLE ?>" class="require-if-active resizeField" data-require-pair="#switch_1" required="">      <div class="label"><?= TEXT_TESTIMONIALS_TITLE ?></div>
+                                <?= zen_draw_input_field('testimonials_title', $testimonials_title, 'id="tm-title1" title="' . ALT_FIELD_TITLE . '" class="require-if-active resizeField" data-require-pair="#switch_1"') ?>
+                                <div class="label"><?= TEXT_TESTIMONIALS_TITLE ?></div>
                             </div>
 
                             <div>
                                 <div>
                                     <?= TEXT_FIELD_1_QUESTION1 ?>
                                     <br>
-                                    <?= zen_draw_radio_field('find-1', TEXT_YES, '', 'id="find_yes"') . '<label for="find_yes" class="inputLabel">' . TEXT_YES . '</label>' . zen_draw_radio_field('find-1', TEXT_NO, '', 'id="find_no"') . '<label for="find_no" class="inputLabel">' . TEXT_NO . '</label>' ?>
+                                    <?= zen_draw_radio_field('find-1', 'yes', '', 'id="find-yes-1"') .
+                                    '<label for="find-yes-1" class="inputLabel">' . TEXT_YES . '</label>' .
+                                    zen_draw_radio_field('find-1', 'no', '', 'id="find-no-1"') .
+                                    '<label for="find-no-1" class="inputLabel">' . TEXT_NO . '</label>' ?>
                                 </div>
                             </div>
 
                             <p><?= TEXT_FIELD_1_QUESTION2 ?></p>
                             <div>
-                                <?= zen_draw_textarea_field('testimonials_html_text', '70', '4', $testimonials_html_text, 'id="testimonials_html_text" pattern="^([- \w\d\u00c0-\u024f]+)$" class="require-if-active resizeField" data-require-pair="#switch_1"');  ?>
+                                <?= zen_draw_textarea_field('testimonials_html_text', '70', '4', $testimonials_html_text, 'id="tm-html1" class="require-if-active resizeField" data-require-pair="#switch_1"');  ?>
                                 <div class="label"><?= TEXT_TESTIMONIALS_DESCRIPTION ?></div>
                             </div>
                         </div>
                     </div>
        
-<!-- online order experience switch_2 //-->       
-                    <div>
-                        <?= zen_draw_radio_field('feedback', LABEL_FEEDBACK_2, '', 'id="switch_2"') . '<label for="switch_2">' . LABEL_FEEDBACK_2 . '</label>' ?>
+<!-- online order experience switch_2 //-->
+                    <div class="switch-wrap">
+                        <?= zen_draw_radio_field('feedback', LABEL_FEEDBACK_2, '', 'id="switch_2"') .
+                            '<label for="switch_2">' . LABEL_FEEDBACK_2 . '</label>' ?>
                         <div class="reveal-if-active go-up"> 
                             <div>
-                                <?= zen_draw_input_field('testimonials_name', $testimonials_name, ' id="testimonials_name_2" pattern="^([- \w\d\u00c0-\u024f]+)$" title="' . ALT_FIELD_NAME . '" class="require-if-active resizeField" data-require-pair="#switch_2"') ?>
-                                <div class="label"><?= TEXT_TESTIMONIALS_NAME ?> </div>
+                                <?= zen_draw_input_field('testimonials_name', $testimonials_name, 'id="tm-name2" title="' . ALT_FIELD_NAME . '" class="require-if-active resizeField" data-require-pair="#switch_2"') ?>
+                                <div class="label"><?= TEXT_TESTIMONIALS_NAME ?></div>
                             </div>
 <?php
-    if (!zen_is_logged_in() || zen_in_guest_checkout()) {
+if (!zen_is_logged_in() || zen_in_guest_checkout()) {
 ?>
                             <i title="<?= TITLE_EMAIL ?>"><?= EXCLAMATION_CIRCLE ?></i>
                             <div>
-                                <?= zen_draw_input_field('testimonials_mail', $testimonials_mail, ' id="testimonials_mail" spellcheck="false" title="' . ALT_FIELD_EMAIL . '" pattern="^(([-\w\d]+)(\.[-\w\d]+)*@([-\w\d]+)(\.[-\w\d]+)*(\.([a-zA-Z]{2,5}|[\d]{1,3})){1,2})$" class="require-if-active resizeField" data-require-pair="#switch_2"', 'email')  ?>
+                                <?= zen_draw_input_field('testimonials_mail', $testimonials_mail, 'id="tm-add-mail2" spellcheck="false" title="' . ALT_FIELD_EMAIL . '" class="require-if-active resizeField" data-require-pair="#switch_2"', 'email')  ?>
                                 <div class="label"><?= TEXT_TESTIMONIALS_MAIL ?> </div>
                             </div>
 <?php
-    } else {
-?>   
-                            <?= zen_draw_hidden_field('testimonials_mail', $testimonials_mail); 
-    }
+} else {
+?>
+                            <?= zen_draw_hidden_field('testimonials_mail', $testimonials_mail) ?>
+<?php
+}
 ?>
                             <div>
-                                <input type="text" name="testimonials_title" value="<?= TEXT_FIELD_2_TITLE ?>" id="testimonials_title" pattern="^([- \w\d\u00c0-\u024f]+)$" title="<?= ALT_FIELD_TITLE ?>" class="require-if-active resizeField" data-require-pair="#switch_2" required="">      <div class="label"><?= TEXT_TESTIMONIALS_TITLE ?></div>
+                                <?= zen_draw_input_field('testimonials_title', $testimonials_title, 'id="tm-title2" title="' . ALT_FIELD_TITLE . '" class="require-if-active resizeField" data-require-pair="#switch_2"') ?>
+                                <div class="label"><?= TEXT_TESTIMONIALS_TITLE ?></div>
                             </div>
                             <div>
                                 <div>
                                     <?= TEXT_FIELD_2_QUESTION1 ?>
                                     <br>
-                                    <?= zen_draw_radio_field('order1', TEXT_YES, '', 'id="order_yes"') . '<label for="order_yes" class="inputLabel">' . TEXT_YES . '</label>' . zen_draw_radio_field('order1', TEXT_NO, '', 'id="order_no"') . '<label for="order_no" class="inputLabel">' . TEXT_NO . '</label>' ?>
+                                    <?= zen_draw_radio_field('order1', 'yes', $ordered, 'id="order_yes"') .
+                                        '<label for="order_yes" class="inputLabel">' . TEXT_YES . '</label>' .
+                                        zen_draw_radio_field('order1', 'no', $ordered, 'id="order_no"') .
+                                        '<label for="order_no" class="inputLabel">' . TEXT_NO . '</label>' ?>
                                 </div>
                             </div>
 
                             <p><?= TEXT_FIELD_1_QUESTION2 ?></p>
                             <div>
-                                <?= zen_draw_textarea_field('testimonials_html_text', '70', '4', $testimonials_html_text, 'id="testimonials_html_text" pattern="^([- \w\d\u00c0-\u024f]+)$" class="require-if-active resizeField" data-require-pair="#switch_2"');  ?>
+                                <?= zen_draw_textarea_field('testimonials_html_text', '70', '4', $testimonials_html_text, 'id="tm-html2" class="require-if-active resizeField" data-require-pair="#switch_2"');  ?>
                                 <div class="label"><?= TEXT_TESTIMONIALS_DESCRIPTION ?></div>
                             </div>
 
                         </div>
                     </div>
-<!-- Mobile shopping experience switch_3 //-->       
-                    <div>
-                        <?= zen_draw_radio_field('feedback', LABEL_FEEDBACK_3, '', 'id="switch_3"') . '<label for="switch_3">' . LABEL_FEEDBACK_3 . '</label>' ?>
+<!-- Mobile shopping experience switch_3 //-->
+                    <div class="switch-wrap">
+                        <?= zen_draw_radio_field('feedback', LABEL_FEEDBACK_3, '', 'id="switch_3"') .
+                            '<label for="switch_3">' . LABEL_FEEDBACK_3 . '</label>' ?>
                         <div class="reveal-if-active go-up"> 
                             <div>
-                                <?= zen_draw_input_field('testimonials_name', $testimonials_name, ' id="testimonials_name_3" pattern="^([- \w\d\u00c0-\u024f]+)$" title="' . ALT_FIELD_NAME . '" class="require-if-active resizeField" data-require-pair="#switch_3"') ?>
+                                <?= zen_draw_input_field('testimonials_name', $testimonials_name, ' id="tm-name3" title="' . ALT_FIELD_NAME . '" class="require-if-active resizeField" data-require-pair="#switch_3"') ?>
                                 <div class="label"><?= TEXT_TESTIMONIALS_NAME ?></div>
                             </div>
  <?php
-    if (!zen_is_logged_in() || zen_in_guest_checkout()) {
+if (!zen_is_logged_in() || zen_in_guest_checkout()) {
 ?>
                             <i title="<?= TITLE_EMAIL ?>"><?= EXCLAMATION_CIRCLE ?></i>
                             <div>
-                                <?= zen_draw_input_field('testimonials_mail', $testimonials_mail, ' id="testimonials_mail" spellcheck="false" title="' . ALT_FIELD_EMAIL . '" pattern="^(([-\w\d]+)(\.[-\w\d]+)*@([-\w\d]+)(\.[-\w\d]+)*(\.([a-zA-Z]{2,5}|[\d]{1,3})){1,2})$" class="require-if-active resizeField" data-require-pair="#switch_3"', 'email')  ?>
+                                <?= zen_draw_input_field('testimonials_mail', $testimonials_mail, ' id="tm-email3" spellcheck="false" title="' . ALT_FIELD_EMAIL . '" class="require-if-active resizeField" data-require-pair="#switch_3"', 'email')  ?>
                                 <div class="label"><?= TEXT_TESTIMONIALS_MAIL ?></div>
                             </div>
 <?php
-    } else {
+} else {
 ?>
-                            <?= zen_draw_hidden_field('testimonials_mail', $testimonials_mail); 
-    }
+                            <?= zen_draw_hidden_field('testimonials_mail', $testimonials_mail) ?>
+<?php
+}
 ?>
                             <div>
-                                <input type="text" name="testimonials_title" value="<?= TEXT_FIELD_3_TITLE ?>" id="testimonials_title" pattern="^([- \w\d\u00c0-\u024f]+)$" title="<?= ALT_FIELD_TITLE ?>" class="require-if-active resizeField" data-require-pair="#switch_3" required="">      <div class="label"><?= TEXT_TESTIMONIALS_TITLE ?></div>
+                                <?= zen_draw_input_field('testimonials_title', $testimonials_title, 'id="tm-title3" title="' . ALT_FIELD_TITLE . '" class="require-if-active resizeField" data-require-pair="#switch_3"') ?>
+                                <div class="label"><?= TEXT_TESTIMONIALS_TITLE ?></div>
                             </div>
                             <div>
                                 <?= zen_draw_hidden_field('mobile_device', 'none') ?>
                                 <?= zen_draw_checkbox_field('mobile_device', TEXT_YES, false, ' id="mobile_device" ') . '<label for="mobile_device" >' . TEXT_FIELD_3_QUESTION1 . '</label>' ?>
-                                <div class="reveal-if-active">
-                                    <div for="mobile_device_name"><?= TEXT_FIELD_3_QUESTION2 ?></div>
+                                <div>
+                                    <div><?= TEXT_FIELD_3_QUESTION2 ?></div>
                                     <?= zen_draw_input_field('mobile_device_name', $mobile_device_name, ' id="mobile_device_name" class="resizeField" placeholder="iPhone x" title="' . TEXT_FIELD_3_QUESTION3 . '" data-require-pair="#mobile_device"') ?>    
                                     <br>
-                                    <div for="papermap_qa"><?= TEXT_FIELD_3_QUESTION4 ?></div>
+                                    <div><?= TEXT_FIELD_3_QUESTION4 ?></div>
                                     <?= zen_draw_input_field('screen_size', $screen_size, ' id="screen_size" class="resizeField" placeholder="1 x 3 inch" title="' . ALT_FIELD_3_QUESTION4 . '" data-require-pair="#mobile_device"') ?>
                                 </div>
                             </div>
 
                             <p><?= TEXT_FIELD_3_QUESTION5 ?></p>
                             <div>
-                                <?= zen_draw_textarea_field('testimonials_html_text', '70', '4', $testimonials_html_text, 'id="testimonials_html_text" pattern="^([- \w\d\u00c0-\u024f]+)$" class="require-if-active resizeField" data-require-pair="#switch_3"');  ?>
+                                <?= zen_draw_textarea_field('testimonials_html_text', '70', '4', $testimonials_html_text, 'id="tm-html3" class="require-if-active resizeField" data-require-pair="#switch_3"');  ?>
                                 <div class="label"><?= TEXT_TESTIMONIALS_DESCRIPTION ?></div>
                             </div>
                         </div>
                     </div>
 <!-- Store Experience switch_4 //-->
-                    <div>
-                        <?= zen_draw_radio_field('feedback', LABEL_FEEDBACK_4, '', 'id="switch_4"') . '<label for="switch_4">' . LABEL_FEEDBACK_4 . '</label>' ?>
+                    <div class="switch-wrap">
+                        <?= zen_draw_radio_field('feedback', LABEL_FEEDBACK_4, '', 'id="switch_4"') .
+                            '<label for="switch_4">' . LABEL_FEEDBACK_4 . '</label>' ?>
                         <div class="reveal-if-active go-up"> 
                             <div>
-                                <?= zen_draw_input_field('testimonials_name', $testimonials_name, ' id="testimonials_name_4" pattern="^([- \w\d\u00c0-\u024f]+)$" title="' . ALT_FIELD_NAME . '" class="require-if-active resizeField" data-require-pair="#switch_4"') ?>
+                                <?= zen_draw_input_field('testimonials_name', $testimonials_name, 'id="tm-name4" title="' . ALT_FIELD_NAME . '" class="require-if-active resizeField" data-require-pair="#switch_4"') ?>
                                 <div class="label"><?= TEXT_TESTIMONIALS_NAME ?></div>
                             </div>
 <?php
-    if (!zen_is_logged_in() || zen_in_guest_checkout()) {
+if (!zen_is_logged_in() || zen_in_guest_checkout()) {
 ?>
                             <i title="<?= TITLE_EMAIL ?>"><?= EXCLAMATION_CIRCLE ?></i>
                             <div>
-                                <?= zen_draw_input_field('testimonials_mail', $testimonials_mail, ' id="testimonials_mail" spellcheck="false" title="' . ALT_FIELD_EMAIL . '" pattern="^(([-\w\d]+)(\.[-\w\d]+)*@([-\w\d]+)(\.[-\w\d]+)*(\.([a-zA-Z]{2,5}|[\d]{1,3})){1,2})$" class="require-if-active resizeField" data-require-pair="#switch_4"', 'email')  ?>
-                                <div class="label"><?= TEXT_TESTIMONIALS_MAIL ?> </div>
+                                <?= zen_draw_input_field('testimonials_mail', $testimonials_mail, ' id="tm-email4" spellcheck="false" title="' . ALT_FIELD_EMAIL . '"  class="require-if-active resizeField" data-require-pair="#switch_4"', 'email') ?>
+                                <div class="label"><?= TEXT_TESTIMONIALS_MAIL ?></div>
                             </div>
 <?php
-    } else {
+} else {
 ?>
-                            <?= zen_draw_hidden_field('testimonials_mail', $testimonials_mail); 
-    }
+                            <?= zen_draw_hidden_field('testimonials_mail', $testimonials_mail) ?>
+<?php
+}
 ?> 
                             <div>
-                                <input type="text" name="testimonials_title" value="<?= TEXT_FIELD_4_TITLE ?>" id="testimonials_title" pattern="^([- \w\d\u00c0-\u024f]+)$" title="<?= ALT_FIELD_TITLE ?>" class="require-if-active resizeField" data-require-pair="#switch_4" required="">      <div class="label"><?= TEXT_TESTIMONIALS_TITLE ?></div>
+                                <?= zen_draw_input_field('testimonials_title', $testimonials_title, 'id="tm-title4" title="' . ALT_FIELD_TITLE . '" class="require-if-active resizeField" data-require-pair="#switch_4"') ?>
+                                <div class="label"><?= TEXT_TESTIMONIALS_TITLE ?></div>
                             </div>
+
                             <div>
                                 <div class="switch-title"><?= TEXT_FIELD_4_QUESTION1 ?></div>
-                                <?= zen_draw_radio_field('feedback_about', TEXT_FIELD_4_QUESTION2, '', 'id="store_feedback_1"') . '<label for="store_feedback_1" class="feedbackLabel" title="' . TEXT_FIELD_4_QUESTION2 . '">' . TEXT_OPTION_1 . '</label> <div>' . TEXT_FIELD_4_QUESTION2 . '</div>';  ?>
-                                <br class="clearBoth">
-                                <?= zen_draw_radio_field('feedback_about', TEXT_FIELD_4_QUESTION3, '', 'id="store_feedback_2"') . '<label for="store_feedback_2" class="feedbackLabel" title="' . TEXT_FIELD_4_QUESTION3 . '">' . TEXT_OPTION_2 . '</label> <div>' . TEXT_FIELD_4_QUESTION3 . '</div>' ?>
-                                <br class="clearBoth">       
-                                <?= zen_draw_radio_field('feedback_about', TEXT_FIELD_4_QUESTION4, '', 'id="store_feedback_3"') . '<label for="store_feedback_3" class="feedbackLabel" title="' . TEXT_FIELD_4_QUESTION4 . '">' . TEXT_OPTION_3 . '</label> <div>' . TEXT_FIELD_4_QUESTION4 . '</div>' ?>
+                                <div id="feedback-about">
+                                    <?= zen_draw_radio_field('feedback_about', '2', '', 'id="store_feedback_1"') .
+                                        '<label for="store_feedback_1" title="' . TEXT_FIELD_4_QUESTION2 . '">' .
+                                            TEXT_FIELD_4_QUESTION2 .
+                                        '</label>' ?>
+
+                                    <?= zen_draw_radio_field('feedback_about', '3', '', 'id="store_feedback_2"') .
+                                        '<label for="store_feedback_2" title="' . TEXT_FIELD_4_QUESTION3 . '">' . 
+                                            TEXT_FIELD_4_QUESTION3 .
+                                        '</label>' ?>
+
+                                    <?= zen_draw_radio_field('feedback_about', '4', '', 'id="store_feedback_3"') .
+                                    '<label for="store_feedback_3" title="' . TEXT_FIELD_4_QUESTION4 . '">' .
+                                        TEXT_FIELD_4_QUESTION4 .
+                                    '</label>' ?>
+                                </div>
                             </div>
 
                             <p><?= TEXT_FIELD_4_QUESTION5 ?></p>
                             <div>
-                                <?= zen_draw_textarea_field('testimonials_html_text', '70', '4', $testimonials_html_text, 'id="testimonials_html_text" pattern="^([- \w\d\u00c0-\u024f]+)$" class="require-if-active resizeField" data-require-pair="#switch_4"');  ?>
+                                <?= zen_draw_textarea_field('testimonials_html_text', '70', '4', $testimonials_html_text, 'id="tm-html4" class="require-if-active resizeField" data-require-pair="#switch_4"');  ?>
                                 <div class="label"><?= TEXT_TESTIMONIALS_DESCRIPTION ?></div>
                             </div>
                         </div>
                     </div>
  <!-- Other feedback switch_5 //-->
-                    <div>
+                    <div class="switch-wrap">
                         <?= zen_draw_radio_field('feedback', LABEL_FEEDBACK_6, '', 'id="switch_5"') . '<label for="switch_5">' . LABEL_FEEDBACK_6 . '</label>' ?>
                         <div class="reveal-if-active go-up"> 
                             <div>
-                                <?= zen_draw_input_field('testimonials_name', $testimonials_name, ' id="testimonials_name_6" pattern="^([- \w\d\u00c0-\u024f]+)$" title="' . ALT_FIELD_NAME . '" class="require-if-active resizeField" data-require-pair="#switch_5"') ?>
-                                <div class="label"><?= TEXT_TESTIMONIALS_NAME ?> </div>
+                                <?= zen_draw_input_field('testimonials_name', $testimonials_name, ' id="tm-name5" title="' . ALT_FIELD_NAME . '" class="require-if-active resizeField" data-require-pair="#switch_5"') ?>
+                                <div class="label"><?= TEXT_TESTIMONIALS_NAME ?></div>
                             </div>
 <?php
-    if (!zen_is_logged_in() || zen_in_guest_checkout()) {
+if (!zen_is_logged_in() || zen_in_guest_checkout()) {
 ?>
                             <i title="<?= TITLE_EMAIL ?>"><?= EXCLAMATION_CIRCLE ?></i>
                             <div>
-                                <?= zen_draw_input_field('testimonials_mail', $testimonials_mail, ' id="testimonials_mail" spellcheck="false" title="' . ALT_FIELD_EMAIL . '" pattern="^(([-\w\d]+)(\.[-\w\d]+)*@([-\w\d]+)(\.[-\w\d]+)*(\.([a-zA-Z]{2,5}|[\d]{1,3})){1,2})$" class="require-if-active resizeField" data-require-pair="#switch_5"', 'email')  ?>
-                                <div class="label"><?= TEXT_TESTIMONIALS_MAIL ?> </div>
+                                <?= zen_draw_input_field('testimonials_mail', $testimonials_mail, ' id="tm-email5" spellcheck="false" title="' . ALT_FIELD_EMAIL . '" class="require-if-active resizeField" data-require-pair="#switch_5"', 'email')  ?>
+                                <div class="label"><?= TEXT_TESTIMONIALS_MAIL ?></div>
                             </div>
 <?php
-    } else {
+} else {
 ?>
                             <?= zen_draw_hidden_field('testimonials_mail', $testimonials_mail) ?>
 <?php
-    }
+}
 ?>
                             <div>
-                                <input type="text" name="testimonials_title" value="<?= TEXT_FIELD_6_TITLE ?>" id="testimonials_title" pattern="^([- \w\d\u00c0-\u024f]+)$" title="<?= ALT_FIELD_TITLE ?>" class="require-if-active resizeField" data-require-pair="#switch_5" required="">      <div class="label"><?= TEXT_TESTIMONIALS_TITLE ?></div>
+                                <?= zen_draw_input_field('testimonials_title', $testimonials_title, 'id="tm-title6" title="' . ALT_FIELD_TITLE . '" class="require-if-active resizeField" data-require-pair="#switch_5"') ?>
+                                <div class="label"><?= TEXT_TESTIMONIALS_TITLE ?></div>
                             </div>
                             <p><?= TEXT_FIELD_6_QUESTION1 ?></p>
                             <div>
-                                <?= zen_draw_textarea_field('testimonials_html_text', '70', '4', $testimonials_html_text, 'id="testimonials_html_text" pattern="^([- \w\d\u00c0-\u024f]+)$" class="require-if-active resizeField" data-require-pair="#switch_5"');  ?>
+                                <?= zen_draw_textarea_field('testimonials_html_text', '70', '4', $testimonials_html_text, 'id="tm-html5" class="require-if-active resizeField" data-require-pair="#switch_5"');  ?>
                                 <div class="label"><?= TEXT_TESTIMONIALS_DESCRIPTION ?></div>
                             </div>
                         </div>
@@ -292,14 +324,17 @@ if ($tmStatus !== 'on') {
                     <div class="reveal">
                         <div class="switch-footer">
                             <div class="switch-title"><?= TEXT_FIELD_CONTACT ?></div>
-                            <input type="radio" id="switch_email" name="contact_3" value="<?= TEXT_FIELD_CONTACT_EMAIL ?>"><label for="switch_email" class="inputLabel"><?= TEXT_FIELD_CONTACT_EMAIL ?></label> 
-                            <input type="radio" id="switch_no" name="contact_3" value="<?= TEXT_NO ?>" checked><label for="switch_no" class="inputLabel"><?= TEXT_NO ?></label>
+                            <input type="radio" id="switch_email" name="contact_3" value="email">
+                            <label for="switch_email" class="inputLabel"><?= TEXT_FIELD_CONTACT_EMAIL ?></label> 
+                            <input type="radio" id="switch_no" name="contact_3" value="no" checked>
+                            <label for="switch_no" class="inputLabel"><?= TEXT_NO ?></label>
                             <br class="clearBoth">
                             <div>
-                                <input type="radio" id="switch_phone" name="contact_3" value="<?= TEXT_FIELD_CONTACT_PHONE ?>"><label for="switch_phone" class="inputLabel"><?= TEXT_FIELD_CONTACT_PHONE ?></label>
-                                <div class="reveal-if-active">
-                                    <div for="testimonials_title"><?= TEXT_FIELD_PHONE_NUMBER ?></div>
-                                    <input type="tel" name="telephone" id="telephone" class="require-if-active resizeField" placeholder="123-123-1234" title="<?= ALT_FIELD_PHONE_NUMBER ?>" pattern="^\d{3}-\d{3}-\d{4}$" data-require-pair="#switch_phone" >
+                                <input type="radio" id="switch_phone" name="contact_3" value="phone">
+                                <label for="switch_phone" class="inputLabel"><?= TEXT_FIELD_CONTACT_PHONE ?></label>
+                                <div>
+                                    <div><?= TEXT_FIELD_PHONE_NUMBER ?></div>
+                                    <input type="tel" name="telephone" id="telephone" class="require-if-active resizeField" placeholder="123-123-1234" title="<?= ALT_FIELD_PHONE_NUMBER ?>" data-require-pair="#switch_phone">
                                 </div>
                             </div>
                         </div>
@@ -307,41 +342,14 @@ if ($tmStatus !== 'on') {
                         <br>
                         <div class="switch-footer">
                             <div class="switch-title"><?= TEXT_FIELD_PERMISSION ?></div>
-                            <?= zen_draw_radio_field('make_public', TEXT_YES, '', 'id="make_public_yes" checked ') . '<label for="make_public_yes" class="inputLabel">' . TEXT_YES . '</label> ' . zen_draw_radio_field('make_public', TEXT_NO, '', 'id="make_public_no"') . '<label for="make_public_no" class="inputLabel">' . TEXT_NO . '</label>' ?>
+                            <?= zen_draw_radio_field('make_public', 'yes', '', 'id="make_public_yes" checked ') ?>
+                             <label for="make_public_yes" class="inputLabel"><?= TEXT_YES ?></label>
+                            <?= zen_draw_radio_field('make_public', 'no', '', 'id="make_public_no"') ?>
+                            <label for="make_public_no" class="inputLabel"><?= TEXT_NO ?></label>
                         </div> 
                         <br class="clearBoth"> 
-                        <br>
 <?php
-    if (!zen_is_logged_in() || zen_in_guest_checkout()) {
-?>
-                        <p class="guidelines"><?= TEXT_FIELD_AVATARS ?></p>
-                        <div class="avatars">
-                            <div><?= TEXT_FIELD_AVATARS_CLICK ?></div><br>
-                            <div class="avatarList">
-                                <div class="mainImg"><?= zen_image(DIR_WS_IMAGES . TESTIMONIAL_IMAGE_DIRECTORY . 'user-male-icon.png') ?></div>  
-                                <div id="divCircle">
-                                    <div id="middleBubble"></div>
-                                    <?= $at_avatars ?>
-                                </div>
-                            </div>
-                            <input type="hidden" name="avatar_register" value="<?= DIR_WS_IMAGES . TESTIMONIAL_IMAGE_DIRECTORY . 'user-male-icon.png' ?>" id="gadget_url">
-                        </div>
-<?php
-    } else {
-?>
-                        <div class="avatars">
-                            <div class="center">
-                                <h2><?= TEXT_FIELD_CURRENT_AVATAR ?></h2>
-                                <img src="<?= DIR_WS_IMAGES . $tm_avatar ?>" alt="Me" class="rounded">
-                            </div>
-                        </div>
-                        <?= zen_draw_hidden_field('avatar_register', $tm_avatar) ?>
-<?php
-    }
-?>
-                        <br class="clearBoth"> 
-<?php
-    if (DISPLAY_ADD_IMAGE === 'on') {
+if (DISPLAY_ADD_IMAGE === 'on') {
 ?>
                         <div class="box" id="clear-box">
                             <p class="guidelines"><?= TEXT_FIELD_FEEDBACK_IMAGE ?></p>
@@ -416,24 +424,21 @@ $('#file-reset').on('click', function(e) {
 </script>
                         <br class="clearBoth">
 <?php
-    }
+}
 ?>
-                        <br class="clearBoth">
                         <?= zen_draw_input_field($antiSpamFieldName, '', ' size="40" id="CUAS" style="visibility:hidden; display:none;" autocomplete="off"') ?>
-                        <br><br>
 <?php
-    $postme = '';
-    if (DISPLAY_PRIVACY_CONDITIONS === 'true') {
-        $postme = 'postme';
+$postme = '';
+if (DISPLAY_PRIVACY_CONDITIONS === 'true') {
+    $postme = 'postme';
 ?>
                         <div class="switch-footer">
                             <div class="switch-title"><?= TEXT_PRIVACY_CONFIRM ?></div>
                             <?= zen_draw_checkbox_field('privacy_conditions', '1',  $privacy, ' class="checky" id="privacy_left" ') . '<label for="privacy_left" class="inputLabel">Agree</label>' ?> 
                         </div>
                         <br class="clearBoth">
-                        <br>
 <?php
-    }
+}
 ?>
                     </div>
                 </div>
@@ -448,127 +453,54 @@ $('#file-reset').on('click', function(e) {
         </div>
 <script >
 $(document).ready(function () {
-    //Center the "info" bubble in the  "circle" div
-    var divTop = ($("#divCircle").height() - $("#middleBubble").height()) / 2;
-    var divLeft = ($("#divCircle").width() - $("#middleBubble").width()) / 2;
-    $("#middleBubble").css("top", divTop + "px");
-    $("#middleBubble").css("left", divLeft + "px");
+    var FormStuff = {
+        init: function () {
+            // kick it off once, in case the radio is already checked when the page loads
+            this.applyConditionalRequired();
+            this.bindUIActions();
+            $("#postme").prop('disabled', true);
+            $("#postme").css({opacity:0.3,cursor:'default'});
+        },
 
-    //Arrange the icons in a circle centered in the div
-    numItems = $("#divCircle img").length; //How many items are in the circle?
-    start = 0.0; //the angle to put the first image at. a number between 0 and 2pi
-    step = 4 * Math.PI / numItems; //calculate the amount of space to put between the items.
+        bindUIActions: function () {
+            // when a radio or checkbox changes value, click or otherwise
+            $('input[name="feedback"]').on('change', this.applyConditionalRequired);
+        },
 
-    //Now loop through the buttons and position them in a circle
-    $("#divCircle img").each(function (index) {
-        radius = ($("#divCircle").width() - $(this).width()) / 2.3; 
-        /*The radius is the distance from the center of the div to the middle of an icon
-        * the following lines are a standard formula for calculating points on a circle. x = cx + r * cos(a); y = cy + r * sin(a)
-        * We have made adjustments because the center of the circle is not at (0,0), but rather the top/left coordinates for the center of the div
-        * We also adjust for the fact that we need to know the coordinates for the top-left corner of the image, not for the center of the image.
-        */
-        tmpTop = $("#divCircle").height() / 2 + radius * Math.sin(start) - $(this).height() / 2;
-        tmpLeft = $("#divCircle").width() / 2 + radius * Math.cos(start) - $(this).width() / 2;
-        start += step; //add the "step" number of radians to jump to the next icon
+        applyConditionalRequired: function () {
+            $('input[name="feedback"]').each(function () {
+                let parentId = $(this).parent('.switch-wrap').attr('id');
 
-        //set the top/left settings for the image
-        $(this).css("top", tmpTop);
-        $(this).css("left", tmpLeft);
+                if ($(this).is(':checked')) {
+                    $('#'+parentId).find('input[name!="feedback"], select, textarea').each(function() {
+                        if ($(this).hasClass('require-if-active')) {
+                            $(this).prop('required', true);
+                        } else {
+                            $(this).prop('required', false);
+                        }
+                    });
+                    $('#'+parentId).find('input, select, textarea').prop('disabled', false);
+                } else {
+                    $('#'+parentId).find('input[name!="feedback"], select, textarea').prop('required', false);
+                    $('#'+parentId).find('input[name!="feedback"], select, textarea').prop('disabled', true);
+                }
+            });
+        }
+    };
+
+    FormStuff.init();
+
+    $(".checky").click(function() {
+        if ($(".checky").is(":checked")) {
+            $("#postme").removeAttr("disabled"); 
+            $("#postme").css({opacity:1,cursor:'pointer'}); 
+        } else {
+            $("#postme").attr("disabled","disabled");
+            $("#postme").css({opacity:0.3,cursor:'default'});
+        }
     });
 });
-
-$('.avatarList').click(function () {
-    $(this).toggleClass('expand');
-    $('#divCircle').toggleClass('expand');
-});
-
-$('#divCircle img').click(function () {
-    var theSrc = $(this).attr('src');
-    // alert(theSrc);
-    $('.mainImg img').attr('src', theSrc);
-    $("#gadget_url").val(theSrc);
-});
-
-var FormStuff = {
-  init: function () {
-  // kick it off once, in case the radio is already checked when the page loads
-    this.applyConditionalRequired();
-    this.bindUIActions();
-    $("#postme").attr("disabled","disabled");
-    $("#postme").css({opacity:0.3,cursor:'default'});
-  },
-
-  bindUIActions: function () {
-  // when a radio or checkbox changes value, click or otherwise
-    $("input[type='radio'], input[type='checkbox']").on("change", this.applyConditionalRequired);
-  },
-
-  applyConditionalRequired: function () {
-     // find each input that may be hidden or not
-    $(".require-if-active").each(function () {
-      var el = $(this);
-      // find the pairing radio or checkbox
-      if ($(el.data("require-pair")).is(":checked")) {
-         // if its checked, the field should be required
-        el.prop("required", true);
-        el.prop("disabled", false);
-      } else {
-        // otherwise it should not
-        el.prop("required", false);
-        el.prop("disabled", true);
-      }
-    });
-  }
-};
-
-FormStuff.init();
-
-$(".checky").click(function() {
-    if ($(".checky").is(":checked")) {
-        $("#postme").removeAttr("disabled"); 
-        $("#postme").css({opacity:1,cursor:'pointer'}); 
-    } else {
-        $("#postme").attr("disabled","disabled");
-        $("#postme").css({opacity:0.3,cursor:'default'});
-    }
-}); 
-</script>
-<script>
-'use strict';
-
-;( function( $, window, document, undefined )
-{
-    $('.inputfile').each(function() {
-        var $input = $(this),
-            $label = $input.next('label'),
-            labelVal = $label.html();
-
-        $input.on( 'change', function(e) {
-            var fileName = '';
-
-            if (this.files && this.files.length > 1) {
-                fileName = ( this.getAttribute( 'data-multiple-caption' ) || '' ).replace( '{count}', this.files.length );
-            } else if (e.target.value) {
-                fileName = e.target.value.split( '\\' ).pop();
-            }
-
-            if (fileName) {
-                $label.find('span').html(fileName);
-            } else {
-                $label.html(labelVal);
-            }
-        });
-
-        // Firefox bug fix
-        $input
-        .on( 'focus', function(){ $input.addClass( 'has-focus' ); })
-        .on( 'blur', function(){ $input.removeClass( 'has-focus' ); });
-    });
-})( jQuery, window, document );
 </script>
     </div>
-<?php
-}
-?>
     <?= '</form>' ?>
 </div>

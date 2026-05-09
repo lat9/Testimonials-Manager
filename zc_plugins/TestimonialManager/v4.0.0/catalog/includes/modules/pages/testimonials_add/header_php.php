@@ -25,23 +25,22 @@ if (REGISTERED_TESTIMONIAL === 'true' && (!zen_is_logged_in() || zen_in_guest_ch
     zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
 
-$tm_plugin = $db->Execute("SELECT status FROM " . TABLE_PLUGIN_CONTROL . " WHERE unique_key = 'TestimonialManager'");
-$tmStatus = ($tm_plugin->fields['status'] == 2) ? 'off' : TM_DISPLAY_SUBMIT;
-
 $antiSpamFieldName = $_SESSION['antispam_fieldname'] ?? 'should_be_empty';
 $mobile_device_name = '';
 $screen_size = '';
 $make_public = '';
 $contact_user = '';
 $user_phone = ''; 
-$rating = '';
+$rating = 5;
 $feedback = '';
 $testimonials_name = '';
 $testimonials_mail = '';
 $testimonials_title = '';
 $testimonials_html_text = '';
 
-if (($_GET['action'] ?? '') === 'send')) {
+$ordered = '';
+
+if (($_GET['action'] ?? '') === 'send') {
     //saved in database table
     $rating = (int)($_POST['rating'] ?? ''); //stars 1-5
     $feedback = zen_db_prepare_input($_POST['feedback'] ?? ''); //label of selected group
@@ -73,6 +72,9 @@ if (($_GET['action'] ?? '') === 'send')) {
     $base_image = substr($testimonials_avatar, strrpos($testimonials_avatar, '/') + 1); //remove all folders from name
     $testimonials_avatar = TESTIMONIAL_IMAGE_DIRECTORY . $base_image; //reformat with image base folder and name
 
+    //begin testing for errors
+    $error = false;
+
     // Upload when form field is filled in by user 
     $file = '';
     if (DISPLAY_ADD_IMAGE === 'on' && isset($_POST['tm_img'])) {  //on off turns on/off uploads
@@ -84,6 +86,9 @@ if (($_GET['action'] ?? '') === 'send')) {
             } elseif (str_starts_with($img, 'data:image/png;base64,')) {
                 $img = str_replace('data:image/png;base64,', '', $img); 
                 $ext = '.png';
+            } else {
+                $error = true;
+                $messageStack->add('new_testimonial', 'Only jpg and png images are allowed.', 'error');
             }
    
             $img = str_replace(' ', '+', $img);
@@ -92,21 +97,19 @@ if (($_GET['action'] ?? '') === 'send')) {
              if (file_put_contents(DIR_WS_IMAGES . $file, $data)) {
                 $messageStack->add('new_testimonial', 'The image was saved');
             } else {
+                $error = true;
                 $messageStack->add('new_testimonial', 'The image could not be saved' , 'error');
             }
         }
     }
 
     $gen_info = 
-        "Find what you wanted:" . ". . . " . $testimonials_wanted . "<br />" . 
-        "Already placed an order:" . " . " . $ordered . "<br />" .
-        "Mobile device used:" . ". . . . " . $mobile_device . "<br />" .
-        "Mobile device name:" . ". . . . " . $mobile_device_name . "<br />" .
-        "Screen info:" . ". . . . . . . " . $screen_size . "<br />" .
-        "In store feedback:" . ". . . . " . $feedback_about;
-
-    //begin testing for errors
-    $error = false;
+        "Find what you wanted: $testimonials_wanted<br>" .
+        "Already placed an order: $ordered<br>" .
+        "Mobile device used:  $mobile_device<br>" .
+        "Mobile device name: $mobile_device_name<br>" .
+        "Screen info: $screen_size<br>" .
+        "In store feedback $feedback_about";
 
     if (zen_validate_email($testimonials_mail) === false) {
         $error = true;
@@ -171,28 +174,28 @@ if (($_GET['action'] ?? '') === 'send')) {
         // if anti-spam is not triggered, prepare and send email:
         if ($antiSpam !== '') {
             $zco_notifier->notify('NOTIFY_SPAM_DETECTED_USING_CONTACT_US');
-        } else) {
+        } else {
             $language_id = (int)$_SESSION['languages_id'];
 
             $sql_data_array = [
-                'language_id' => (int)$language_id, 
-                'testimonials_title' => $testimonials_title, 
-                'testimonials_name' => $testimonials_name, 
-                'testimonials_html_text' => $testimonials_html_text,       
-                'testimonials_image' => $testimonials_avatar, 
-                'testimonials_upimg' => $file,                              
-                'testimonials_mail' => $testimonials_mail, 
-                'tm_rating' => (int)$rating, 
+                'language_id' => (int)$language_id,
+                'testimonials_title' => $testimonials_title,
+                'testimonials_name' => $testimonials_name,
+                'testimonials_html_text' => $testimonials_html_text,
+                'testimonials_image' => $testimonials_avatar,
+                'testimonials_upimg' => $file,
+                'testimonials_mail' => $testimonials_mail,
+                'tm_rating' => (int)$rating,
                 'tm_feedback' => $feedback, 
-                'tm_make_public' => $make_public, 
-                'tm_contact_user' => $contact_user, 
-                'tm_contact_phone' => $user_phone, 
+                'tm_make_public' => $make_public,
+                'tm_contact_user' => $contact_user,
+                'tm_contact_phone' => $user_phone,
                 'tm_privacy_conditions' => (int)$privacy_conditions,
-                'status' => (int)$tm_zero, 
+                'status' => (int)$tm_zero,
                 'date_added' => 'now()',
                 'tm_gen_info' => $gen_info,
-                'helpful_yes' => (int)$tm_zero, 
-                'helpful_no' => (int)$tm_zero
+                'helpful_yes' => (int)$tm_zero,
+                'helpful_no' => (int)$tm_zero,
             ];
             zen_db_perform(TABLE_TESTIMONIALS_MANAGER, $sql_data_array);
 

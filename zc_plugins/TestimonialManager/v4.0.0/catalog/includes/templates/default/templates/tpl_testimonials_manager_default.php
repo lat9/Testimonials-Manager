@@ -26,32 +26,31 @@ $testimonial = $page_check->fields;
     <fieldset class="coms_mid m-2">
         <p class="h3"><?= TEXT_CUSTOMER_REVIEW ?></h3>
 
-        <div id="tm-image-name">
-            <div class="back float-left m-2"><?= zen_image(DIR_WS_IMAGES . $testimonial['testimonials_image'], $testimonial['testimonials_title'], TESTIMONIAL_IMAGE_WIDTH, TESTIMONIAL_IMAGE_HEIGHT); // display avatar ?></div>
+        <div id="tm-name-stars-date">
             <div id="tm-name"><b><?= TESTIMONIALS_BY . zen_output_string_protected($testimonial['testimonials_name']) ?></b></div>
-        </div>
-        <br class="clearBoth">
-        <div id="tm-stars">
+
+            <div id="tm-stars">
 <?php 
 $star1 = '';
 for ($s = 1; $s <= $testimonial['tm_rating']; $s++) {
-    $star1 .= '<svg xmlns="http://www.w3.org/2000/svg" fill="rgba(239,41,41,1)" width="24px" height="auto" viewBox="0 0 576 512"><path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"/></svg>';
+    $star1 .= TM_STAR_MD_FULL;
 }
 $star2 = '';
  for ($r = $testimonial['tm_rating']; $r <= 4; $r++) {
-    $star2 .= '<svg xmlns="http://www.w3.org/2000/svg" fill="rgba(239,41,41,1)" width="24px" height="auto" viewBox="0 0 576 512"><path d="M528.1 171.5L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6zM388.6 312.3l23.7 138.4L288 385.4l-124.3 65.3 23.7-138.4-100.6-98 139-20.2 62.2-126 62.2 126 139 20.2-100.6 98z"/></svg>';
+    $star2 .= TM_STAR_MD_EMPTY;
 }
 echo $star1 . $star2;
 echo ($testimonial['tm_feedback'] !== '') ? '<b>' . zen_output_string_protected($testimonial['testimonials_title']) . ', ' . zen_output_string_protected($testimonial['tm_feedback']) . '</b>' : '';
 ?>
-        </div>
+            </div>
 <?php
 if (DISPLAY_TESTIMONIALS_DATE_PUBLISHED === 'true') {
 ?>
-    <p id="tm-dp"><?= zen_date_long($date_published) ?></p>
+            <div id="tm-dp"><?= zen_date_long($date_published) ?></div>
 <?php
 }
 ?>
+        </div>
         <section class="coms_text">
             <p>
 <?php
