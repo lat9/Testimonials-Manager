@@ -595,7 +595,7 @@ if ($action === 'new') {
             $contents[] = ['text' => '<b>' . TEXT_INFO_TESTIMONIALS_PRIVACY . '</b> ' . ((int)$bInfo->tm_privacy_conditions === 1 ? TEXT_YES : TEXT_NO)];
             $contents[] = ['text' => '<b>' . TEXT_YES_VOTING . '</b> ' . $bInfo->helpful_yes];
             $contents[] = ['text' => '<b>' . TEXT_NO_VOTING . '</b> ' . $bInfo->helpful_no];
-            $contents[] = ['text' => '<b>' . TEXT_INFO_TESTIMONIALS_GEN_INFO . '</b><br>' . zen_output_string_protected($bInfo->tm_gen_info)];
+            $contents[] = ['text' => '<b>' . TEXT_INFO_TESTIMONIALS_GEN_INFO . '</b><br>' . nl2br(zen_output_string_protected($bInfo->tm_gen_info), false)];
             $contents[] = ['text' => '<br>' . TEXT_INFO_TESTIMONIALS_SUBMIT_IMAGE . '<br>' . $bInfo->testimonials_upimg];
             if (!empty($bInfo->testimonials_upimg)) {
                 $contents[] = ['text' => zen_image(DIR_WS_CATALOG_IMAGES . $bInfo->testimonials_upimg, $bInfo->testimonials_title, 150)];
