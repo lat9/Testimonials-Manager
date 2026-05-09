@@ -64,7 +64,7 @@ switch ($action) {
         $testimonials_title = zen_db_prepare_input(zen_sanitize_string($_POST['testimonials_title']));
         $testimonials_name = zen_db_prepare_input(zen_sanitize_string($_POST['testimonials_name']));
         $testimonials_mail = zen_db_prepare_input($_POST['testimonials_mail']);
-        $feedback =   !empty($_POST['tm_feedback']) ? zen_db_prepare_input(zen_sanitize_string($_POST['tm_feedback'])) : '';
+        $feedback = !empty($_POST['tm_feedback']) ? zen_db_prepare_input(zen_sanitize_string($_POST['tm_feedback'])) : '';
         $contact_user = zen_db_prepare_input($_POST['tm_contact_user']);
         $contact_phone = !empty($_POST['tm_contact_phone']) ? zen_db_prepare_input($_POST['tm_contact_phone']) : '';
         $make_public = zen_db_prepare_input($_POST['tm_make_public']);
@@ -112,12 +112,6 @@ switch ($action) {
             'tm_make_public' => $make_public,
             'testimonials_upimg' => ''
         ];
-        $imageIMAGE = !empty($_POST['avatar_image']) ? $_POST['avatar_image'] : '';
-        $imageOLD = zen_db_prepare_input($_POST['old_avatar']);
-        if ($imageIMAGE !== $imageOLD) {
-            // add image manually
-            $sql_data_array['testimonials_image'] = $imageIMAGE;
-        }
 
         if ($action === 'insert') {
             if (empty($_POST['date_added'])) {
@@ -200,7 +194,6 @@ if ($action === 'new') {
         'tm_feedback' => '',  
         'testimonials_name' => '',
         'testimonials_mail' => '',
-        'testimonials_image' => '',
         'testimonials_title' => '',  
         'testimonials_html_text' => '',
         'tm_contact_user' => 'no',
@@ -233,7 +226,7 @@ if ($action === 'new') {
         $testimonials_html_text = $_POST['testimonials_html_text'] ?? '';
     }
 ?>
-        <?= zen_draw_form('new_page', FILENAME_TESTIMONIALS_MANAGER, $page_param . '&action=' . $form_action, 'post', 'enctype="multipart/form-data"') ?>
+        <?= zen_draw_form('new_page', FILENAME_TESTIMONIALS_MANAGER, $page_param . '&action=' . $form_action, 'post', 'enctype="multipart/form-data" class="form-horizontal"') ?>
 <?php
         if ($form_action == 'update') {
             echo zen_draw_hidden_field('testimonials_id', $bID);
@@ -264,7 +257,7 @@ if ($action === 'new') {
         <div class="form-group">
             <?= zen_draw_label(TEXT_TESTIMONIALS_NAME, 'testimonials_name', 'class="col-sm-3 col-form-label"') ?>
             <div class="col-sm-9 col-md-6">
-                <?= zen_draw_input_field('testimonials_name', $bInfo->testimonials_name, zen_set_field_length(TABLE_TESTIMONIALS_MANAGER, 'testimonials_name') . ' class="form-control"', true ) ?>
+                <?= zen_draw_input_field('testimonials_name', $bInfo->testimonials_name, zen_set_field_length(TABLE_TESTIMONIALS_MANAGER, 'testimonials_name') . ' class="form-control"', true) ?>
             </div>
         </div>
  
@@ -293,33 +286,32 @@ if ($action === 'new') {
         <div class="form-group">
             <?= zen_draw_label(TEXT_CONTACT_USER, 'tm_contact_user', 'class="col-sm-3 col-form-label"') ?>
             <div class="col-sm-9 col-md-6">
-                <label class="radio-inline"><?= zen_draw_radio_field('tm_contact_user', TEXT_NO, $bInfo->tm_contact_user === TEXT_NO) . TEXT_NO ?></label>
-                <label class="radio-inline"><?= zen_draw_radio_field('tm_contact_user', TEXT_EMAIL, $bInfo->tm_contact_user === TEXT_EMAIL) . TEXT_EMAIL ?></label>
-                <label class="radio-inline"><?= zen_draw_radio_field('tm_contact_user', TEXT_PHONE, $bInfo->tm_contact_user === TEXT_PHONE) . TEXT_PHONE ?></label>
+                <label class="radio-inline"><?= zen_draw_radio_field('tm_contact_user', 'no', $bInfo->tm_contact_user === 'no') . TEXT_NO ?></label>
+                <label class="radio-inline"><?= zen_draw_radio_field('tm_contact_user', 'email', $bInfo->tm_contact_user === 'email') . TEXT_EMAIL ?></label>
+                <label class="radio-inline"><?= zen_draw_radio_field('tm_contact_user', 'phone', $bInfo->tm_contact_user === 'phone') . TEXT_PHONE ?></label>
            </div>
         </div>
 
         <div class="form-group">
             <?= zen_draw_label(TEXT_USER_PHONE, 'tm_contact_phone', 'class="col-sm-3 col-form-label"') ?>
             <div class="col-sm-9 col-md-6">
-                <?= zen_draw_input_field('tm_contact_phone', $bInfo->tm_contact_phone, ' class="form-control"', false) . TEXT_TESTIMONIALS_OPTIONAL ?>
+                <?= zen_draw_input_field('tm_contact_phone', $bInfo->tm_contact_phone, ' class="form-control"', false) ?>
             </div>
         </div>
 
         <div class="form-group">
             <?= zen_draw_label(TEXT_PUBLIC, 'tm_make_public', 'class="col-sm-3 col-form-label"') ?>
             <div class="col-sm-9 col-md-6">
-                <label class="radio-inline"><?= zen_draw_radio_field('tm_make_public', TEXT_YES, $bInfo->tm_make_public === TEXT_YES) . TEXT_YES ?></label>
-                <label class="radio-inline"><?= zen_draw_radio_field('tm_make_public', TEXT_NO, $bInfo->tm_make_public == TEXT_NO) . TEXT_NO ?></label>
-                <span><?= TEXT_FIELD_REQUIRED ?> </span>
+                <label class="radio-inline"><?= zen_draw_radio_field('tm_make_public', 'yes', $bInfo->tm_make_public === 'yes') . TEXT_YES ?></label>
+                <label class="radio-inline"><?= zen_draw_radio_field('tm_make_public', 'no', $bInfo->tm_make_public !== 'yes') . TEXT_NO ?></label>
             </div>
         </div>
 
         <div class="form-group">
             <?= zen_draw_label(TEXT_PRIVACY, 'tm_privacy_conditions', 'class="col-sm-3 col-form-label"') ?>
             <div class="col-sm-9 col-md-6">
-                <label class="radio-inline"><?= zen_draw_radio_field('tm_privacy_conditions', 1, (int)$bInfo->tm_privacy_conditions === 1,'id="email_format_left"') . 'Yes' ?></label>
-                <label class="radio-inline"><?= zen_draw_radio_field('tm_privacy_conditions', 0, (int)$bInfo->tm_privacy_conditions !== 1, 'id="email_format_right"') . 'No' ?></label>
+                <label class="radio-inline"><?= zen_draw_radio_field('tm_privacy_conditions', 1, (int)$bInfo->tm_privacy_conditions === 1,'id="email_format_left"') . TEXT_YES ?></label>
+                <label class="radio-inline"><?= zen_draw_radio_field('tm_privacy_conditions', 0, (int)$bInfo->tm_privacy_conditions !== 1, 'id="email_format_right"') . TEXT_NO ?></label>
            </div>
         </div>
 
@@ -337,116 +329,17 @@ if ($action === 'new') {
             </div>
         </div>
 
-        <div class="form-group"> 
-            <?= zen_draw_label(TEXT_AVATAR_CURRENT_IMAGE, 'testimonials_image', 'class="col-sm-3 col-form-label"') ?>
-            <div class="col-sm-9 col-md-6">
-<?php  
-    if (!empty($bInfo->testimonials_image)) {
-        $avatar_image = $bInfo->testimonials_image;
-        echo zen_image(DIR_WS_CATALOG_IMAGES . $bInfo->testimonials_image, $bInfo->testimonials_title, TESTIMONIAL_IMAGE_WIDTH, TESTIMONIAL_IMAGE_HEIGHT) . '&nbsp;&nbsp;' . $bInfo->testimonials_image;
-    } else {
-        $avatar_image = 'avatars/at_00.png';
-        echo TEXT_AVATAR_NO_IMAGE;
-    }
-?>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <?= zen_draw_label(TEXT_AVATAR_IMAGE_MANUAL, 'avatar_image', 'class="col-sm-3 col-form-label"') ?> 
-            <div class="col-sm-9 col-md-6">
-                <select class="vodiapicker">
-<?php
-
-    $d = DIR_FS_CATALOG_IMAGES . TESTIMONIAL_IMAGE_DIRECTORY;
-    $i = 0;
-    foreach (glob($d.'*.{jpg,JPG,jpeg,JPEG,png,PNG}',GLOB_BRACE) as $file) {
-        if ($i === 0) {
-            echo '<option value="' . $avatar_image . '" data-thumbnail="' . DIR_WS_CATALOG_IMAGES . $avatar_image . '">' . $avatar_image . '</option>' . "\n";
-        } else {
-            echo '<option value="' . TESTIMONIAL_IMAGE_DIRECTORY . basename($file) . '" data-thumbnail="' . DIR_WS_CATALOG_IMAGES . TESTIMONIAL_IMAGE_DIRECTORY . basename($file) . '">' . TESTIMONIAL_IMAGE_DIRECTORY . basename($file) . '</option>' . "\n";
-        }
-        $i++;
-    }
-?>
-                </select>
-                <?= zen_draw_hidden_field('old_avatar', $bInfo->testimonials_image) ?>
-                <?= zen_draw_hidden_field('avatar_image', $bInfo->testimonials_image) ?>
-
-                <div class="lang-select">
-                    <span class="btn-select" value=""></span> 
-                    <div class="b">
-                        <ul id="a"></ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-<script id="rendered-js" >
-//test for getting url value from attr
-// var img1 = $('.test').attr("data-thumbnail");
-
-    $(document).ready(function() {
-//test for iterating over child elements
-var langArray = [];
-$('.vodiapicker option').each(function () {
-  var img = $(this).attr("data-thumbnail");
-  var text = this.innerText;
-  var value = $(this).val();
-  var item = '<li><img src="' + img + '" alt="" value="' + value + '"/><span>' + text + '</span></li>';
-  langArray.push(item);
-});
-
-$('#a').html(langArray);
-
-//Set the button value to the first el of the array
-$('.btn-select').html(langArray[0]);
-$('.btn-select').attr('value', '<?= $bInfo->testimonials_image ?>');  //en
-
-//change button stuff on click
-$('#a li').click(function () {
-  var img = $(this).find('img').attr("src");
-  var value = $(this).find('img').attr('value');
-  var text = this.innerText;
-  var item = '<li><img src="' + img + '" alt="" /><span>' + text + '</span><input type="hidden" name="avatar_image" value="' + value + '" /></li>';
-  $('.btn-select').html(item);
-  $('.btn-select').attr('value', value);
-  $(".b").toggle();
-  //console.log(value);
-  
-});
-
-$(".btn-select").click(function () {
-  $(".b").toggle();
-});
-
-//check local storage for the lang
-var sessionLang = localStorage.getItem('lang');
-if (sessionLang) {
-  //find an item with value of sessionLang
-  var langIndex = langArray.indexOf(sessionLang);
-  $('.btn-select').html(langArray[langIndex]);
-  $('.btn-select').attr('value', sessionLang);
-} else {
-  var langIndex = langArray.indexOf('ch');
-  console.log(langIndex);
-  $('.btn-select').html(langArray[langIndex]);
-  //$('.btn-select').attr('value', 'en');
-}
- });
-</script>
-
         <div class="form-group">
             <?= zen_draw_label(TEXT_YES_VOTING, 'helpful_yes', 'class="col-sm-3 col-form-label"') ?>
             <div class="col-sm-9 col-md-6">
-                <?= zen_draw_input_field('helpful_yes', $bInfo->helpful_yes, 'class="form-control"', false, 'number') . TEXT_TESTIMONIALS_OPTIONAL ?>
+                <?= zen_draw_input_field('helpful_yes', $bInfo->helpful_yes, 'class="form-control"', false, 'number') ?>
             </div>
         </div>
 
         <div class="form-group">
             <?= zen_draw_label(TEXT_NO_VOTING, 'helpful_no', 'class="col-sm-3 col-form-label"') ?>
             <div class="col-sm-9 col-md-6">
-                <?= zen_draw_input_field('helpful_no', $bInfo->helpful_no, 'class="form-control"', false, 'number') . TEXT_TESTIMONIALS_OPTIONAL ?>
+                <?= zen_draw_input_field('helpful_no', $bInfo->helpful_no, 'class="form-control"', false, 'number') ?>
             </div>
         </div>
 
@@ -463,11 +356,11 @@ if (sessionLang) {
                 <div>
                     <?= zen_image(DIR_WS_CATALOG_IMAGES . $bInfo->testimonials_upimg, $bInfo->testimonials_title, 150, 150) ?>
                 </div>
-                <br>'
+                <br>
                 <?= TEXT_FILENAME . $bInfo->testimonials_upimg ?>
                 <br>
 
-                <a href="<?= zen_href_link(FILENAME_TESTIMONIALS_MANAGER, $page_param . '&bID=' . $bInfo->testimonials_id . '&action=imagedelete') ?>" onclick=\'confirm("<?= TEXT_INFO_DELETE_IMAGE ?>") && document.imagedelete.submit(); return false\' class="btn btn-warning" role="button">
+                <a href="<?= zen_href_link(FILENAME_TESTIMONIALS_MANAGER, $page_param . '&bID=' . $bInfo->testimonials_id . '&action=imagedelete') ?>" onclick="confirm('<?= TEXT_INFO_DELETE_IMAGE ?>') && document.imagedelete.submit(); return false" class="btn btn-warning" role="button">
                     <?= IMAGE_DELETE ?>
                 </a>
 <?php

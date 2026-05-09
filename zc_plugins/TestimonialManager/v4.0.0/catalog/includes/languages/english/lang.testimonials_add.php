@@ -29,13 +29,13 @@ $define = [
     'ERROR_TESTIMONIALS_EMAIL_REQUIRED' => 'You Must include your Email address!',
     'ERROR_TESTIMONIALS_TITLE_REQUIRED' => '<strong>A Testimonial Title is Required!</strong>',
     'ERROR_TESTIMONIALS_DESCRIPTION_REQUIRED' => '<strong>Testimonial is Required!</strong>',
-    'ERROR_TESTIMONIALS_TEXT_MAX_LENGTH' => '<strong>Less than ' . ENTRY_TESTIMONIALS_TEXT_MAX_LENGTH . ' characters!</strong>',
+    'ERROR_TESTIMONIALS_TEXT_MAX_LENGTH' => '<strong>More than ' . ENTRY_TESTIMONIALS_TEXT_MAX_LENGTH . ' characters!</strong>',
     'ERROR_TESTIMONIALS_TEXT_MIN_LENGTH' => '<strong>Less than ' . ENTRY_TESTIMONIALS_TEXT_MIN_LENGTH . ' characters!</strong>',
     'ERROR_TESTIMONIALS' => 'Errors have occurred on your submission! Please correct and resubmit!',
     'ERROR_CONTACT_USER' => 'You must select one of three answers for contacting you!',
 
     'TESTIMONIAL_BLOCKEMAIL_ADDRESS_CHECK_ERROR' => 'That Email address is banned!',
-    'TESTIMONIAL_GIVE_RATING' => '<i><b>' . STORE_NAME . ' </b></i>-- Only shop that has a 0 to 5 star rating system! <br />If you Picked the alien, please tell us why so we can improve our products or service.',
+    'TESTIMONIAL_GIVE_RATING' => '<i><b>' . STORE_NAME . ' </b></i>-- Only shop that has a 0 to 5 star rating system!<br>If you Picked the alien, please tell us why so we can improve our products or service.',
     'TESTIMONIAL_RATING' => 'Please give a rating for this review.',
 
     'LABEL_FEEDBACK_1' => 'online Shopping Experience!',
@@ -46,7 +46,8 @@ $define = [
     'LABEL_FEEDBACK_6' => 'Other feedback!', 
     'TITLE_EMAIL' => 'Your email address is not displayed in reviews.', 
     'TEXT_TESTIMONIALS_HEADER' => 'We <svg xmlns="http://www.w3.org/2000/svg" fill="rgba(239,41,41,1)" width="50px" height="auto" viewBox="0 0 512 512"><path d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"/></svg> Feedback!',
-    'TEXT_TESTIMONIALS_FEEDBACK' => 'Please select regarding which experience you want to provide feedback on.<br />Your name will appear on reviews. Your Email Address will <strong>NOT</strong> be displayed on reviews.',
+
+    'TEXT_TESTIMONIALS_FEEDBACK' => 'Please select regarding which experience you want to provide feedback on.<br>Your name will appear on reviews, but your email-address will <strong>not</strong>.',
 
     'TEXT_RATING_5' => ' Awesome',
     'TEXT_RATING_4' => ' Better',
@@ -62,11 +63,14 @@ $define = [
     'ALT_FIELD_EMAIL' => 'Please enter a Email address (dave@addme.com)',
     'ALT_FIELD_NAME' => 'Your name (no special characters)',
     'ALT_FIELD_TITLE' => 'Give us a Title (no special characters)',
+
     'TEXT_FIELD_1_TITLE' => 'online shopping experience',
-    'TEXT_FIELD_1_QUESTION1' => 'Was you able to find what you wanted?',
+    'TEXT_FIELD_1_QUESTION1' => 'Were you able to find what you wanted?',
     'TEXT_FIELD_1_QUESTION2' => 'Tell us about your experience. What did you like? What can we do better?',
+
     'TEXT_FIELD_2_TITLE' => 'online order experience',
     'TEXT_FIELD_2_QUESTION1' => 'Have you already placed an order?',
+
     'TEXT_FIELD_3_TITLE' => 'Mobile shopping experience',
     'TEXT_FIELD_3_QUESTION1' => 'Did you use a mobile device?',
     'TEXT_FIELD_3_QUESTION2' => 'Type of Mobile device!: ',
@@ -74,23 +78,24 @@ $define = [
     'TEXT_FIELD_3_QUESTION4' => 'Screen size or display size? ',
     'ALT_FIELD_3_QUESTION4' => 'Screen size or display size',
     'TEXT_FIELD_3_QUESTION5' => 'Tell us about your experience. What did you like? What can we do better?',
+
     'TEXT_FIELD_4_TITLE' => 'Store Experience',
     'TEXT_FIELD_4_QUESTION1' => 'Select category you want to provide feedback about.',
     'TEXT_FIELD_4_QUESTION2' => 'Associate feedback',
     'TEXT_FIELD_4_QUESTION3' => 'In-Store experience',
     'TEXT_FIELD_4_QUESTION4' => 'Purchase experience',
     'TEXT_FIELD_4_QUESTION5' => 'Tell us about your experience below.',
+
     'TEXT_FIELD_6_TITLE' => 'Other experience',
     'TEXT_FIELD_6_QUESTION1' => 'Tell us about your experience. What did you like? What can we do better?',
+
     'TEXT_FIELD_CONTACT' => 'If we have additional questions, may we contact you?',
     'TEXT_FIELD_CONTACT_EMAIL' => 'email',
     'TEXT_FIELD_CONTACT_PHONE' => 'phone',
     'TEXT_FIELD_PHONE_NUMBER' => 'Phone Number: ',
     'ALT_FIELD_PHONE_NUMBER' => 'Your phone number (888-123-1234)',
-    'TEXT_FIELD_PERMISSION' => '(Yes) - I grant you the right and permission to publicly disclose my testimonial.<br />(No) - Make this testimonial Nonpublic please.',
-    'TEXT_FIELD_AVATARS' => 'We have a number of Avatars you can pick from. Avatars are not assign to any one user and are selected randomly from 15 of our best ones.',
-    'TEXT_FIELD_AVATARS_CLICK' => 'Click to pick a avatar',
-    'TEXT_FIELD_CURRENT_AVATAR' => 'Your Current Avatar',
+    'TEXT_FIELD_PERMISSION' => '(Yes) - I grant you the right and permission to publicly disclose my testimonial.<br>(No) - Make this testimonial Nonpublic please.',
+
     'TEXT_FIELD_FEEDBACK_IMAGE' => 'Include one image with your feedback. Only in jpg or png format. ',
     'TEXT_FIELD_PICK_IMAGE' => 'Choose a image',
     'ERROR_FIELD_IMAGE' => 'Please only select images in JPG- or PNG-format.',

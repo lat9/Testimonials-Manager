@@ -55,10 +55,7 @@ class ScriptedInstaller extends ScriptedInstallBase
 
                 ('Testimonial Image Height', 'TESTIMONIAL_IMAGE_HEIGHT', '80', 'Set the Height of the Testimonial Image', $cgi, 12, NOW(), NULL, NULL, NULL),
 
-                ('Avatar Image Directory', 'TESTIMONIAL_IMAGE_DIRECTORY', 'avatars/', 'Set the Directory for the Testimonial Image, relative to the <code>/images</code> directory.', $cgi, 13, NOW(), NULL, NULL, NULL),
-
                 ('Image upload Directory', 'TM_UPLOAD_DIRECTORY', 'uploads/', 'Set the Directory for the Testimonial file uploads, relative to the <code>/images</code> directory.', $cgi, 14, NOW(), NULL, NULL, NULL),
-
                 ('Display Submit Testimonial Page', 'TM_DISPLAY_SUBMIT', 'on', 'Display Submit Testimonial page. disable=off enabled=on', $cgi, 15, NOW(), NULL, 'zen_cfg_select_option([''on'', ''off''], ', NULL),
 
                 ('Display upload image field in add testimonials?', 'DISPLAY_ADD_IMAGE', 'on', 'Display upload image field in add testimonials on = displayed, off = not displayed', $cgi, 16, NOW(), NULL, 'zen_cfg_select_option([''on'', ''off''], ', NULL),
@@ -85,7 +82,7 @@ class ScriptedInstaller extends ScriptedInstallBase
         global $sniffer;
         $this->sniffer = $sniffer;
         if ($this->sniffer->table_exists($this->tableName)) {
-            $this->updateTestimonialsTable();
+            $this->updateTestimonialsTables();
         } else {
             $this->executeInstallerSql(
                 "CREATE TABLE `" . $this->tableName . "` (
@@ -123,13 +120,6 @@ class ScriptedInstaller extends ScriptedInstallBase
             $this->executeInstallerSql($sql);
         }
 
-        //modify customer table for avatars, add a default avatar
-        if (!$sniffer->field_exists(TABLE_CUSTOMERS,'tm_avatar')) {
-            $this->executeInstallerSql(
-                "ALTER TABLE " . TABLE_CUSTOMERS . "
-                   ADD COLUMN tm_avatar VARCHAR(255) NOT NULL DEFAULT ''"
-            );
-        }
         return parent::executeInstall();
     }
 
@@ -143,12 +133,12 @@ class ScriptedInstaller extends ScriptedInstallBase
         global $sniffer;
         $this->sniffer = $sniffer;
 
-        $this->updateTestimonialsTable();
+        $this->updateTestimonialsTables();
 
         return parent::executeUpgrade($oldVersion);
     }
 
-    private function updateTestimonialsTable(): void
+    private function updateTestimonialsTables(): void
     {
         $fields_to_drop = [
             'testimonials_url',
@@ -189,6 +179,16 @@ class ScriptedInstaller extends ScriptedInstallBase
         foreach ($fields_to_change as $field_name => $default_value) {
             $this->changeFieldDefault($field_name, $default_value);
         }
+
+        // -----
+        // Hide the Avatar image directory setting, if present; no longer used
+        // as of v4.0.0.
+        //
+        $this->executeInstallerSql(
+            "UPDATE " . TABLE_CONFIGURATION . "
+                SET configuration_group_id = 6
+              WHERE configuration_key = 'TESTIMONIAL_IMAGE_DIRECTORY'"
+        );
     }
 
     private function dropFieldIfExists(string $field_name): void

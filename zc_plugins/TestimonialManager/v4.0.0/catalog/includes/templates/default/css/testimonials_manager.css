@@ -16,6 +16,8 @@ section {clear:both;}
 #tm-helpful b, #tm-helpful-yes, #tm-helpful-no {margin-top:.15rem;}
 #tm-helpful a:link {text-decoration:none;}
 
+#tm-name-stars-date { display:flex;justify-content:space-evenly;padding-bottom:.5rem;}
+
 .h3 {font-size:1.75rem;margin-bottom:.5rem;font-weight:500;line-height:1.2;margin-top:0;}
 .pe-2 {padding-right:.5rem;}
 .ps-2 {padding-left:.5rem;}
