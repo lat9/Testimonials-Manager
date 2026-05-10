@@ -23,21 +23,17 @@ if ($page_query->EOF) {
     return;
 }
 
-$title =  BOX_HEADING_TESTIMONIALS_MANAGER;
-$box_id =  'testimonialsmanager';
 $page_query_list = [];
 foreach ($page_query as $next_item) {
     $page_query_list[] = [
         'id' => (int)$next_item['testimonials_id'],
         'name' => zen_output_string_protected($next_item['testimonials_title']),
         'story' => zen_clean_html($next_item['testimonials_html_text']),
-        'image' => $next_item['testimonials_image'],
         'rating' => (int)$next_item['tm_rating'],
     ];
 }
-$left_corner = false;
-$right_corner = false;
-$right_arrow = false;
+
 $title_link = false;
+$title =  BOX_HEADING_TESTIMONIALS_MANAGER;
 require $template->get_template_dir('tpl_testimonials_manager.php', DIR_WS_TEMPLATE, $current_page_base, 'sideboxes') . '/tpl_testimonials_manager.php';
-require $template->get_template_dir($column_box_default, DIR_WS_TEMPLATE, $current_page_base, 'common') . '/' . $column_box_default
+require $template->get_template_dir($column_box_default, DIR_WS_TEMPLATE, $current_page_base, 'common') . '/' . $column_box_default;

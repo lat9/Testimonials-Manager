@@ -49,12 +49,12 @@ if (($_GET['action'] ?? '') === 'send') {
     $testimonials_name = zen_db_prepare_input($_POST['testimonials_name'] ?? ''); //customer name
     $testimonials_mail = zen_db_prepare_input($_POST['testimonials_mail'] ?? ''); //email address 
     $testimonials_title = zen_db_prepare_input($_POST['testimonials_title'] ?? ''); //title default or user
-    $testimonials_html_text = zen_db_prepare_input(strip_tags($_POST['testimonials_html_text'] ?? '')); //message        
+    $testimonials_html_text = zen_db_prepare_input(strip_tags($_POST['testimonials_html_text'] ?? ''));
 
     $make_public = zen_db_prepare_input($_POST['make_public'] ?? ''); //yes, no
     //footer lines
     $contact_user = zen_db_prepare_input($_POST['contact_3'] ?? '');    //email, no, phone 
-    $user_phone = !empty($_POST['telephone']) ? zen_db_prepare_input($_POST['telephone']) : '';   //123-123-1234         
+    $user_phone = !empty($_POST['telephone']) ? zen_db_prepare_input($_POST['telephone']) : '';   //123-123-1234
     $privacy_conditions = !empty($_POST['privacy_conditions']) ? zen_db_prepare_input($_POST['privacy_conditions']) : '';    //1=checked 0=unchecked
     $tm_zero = 0;  //Items that need for form without zero.
     $antiSpam = !empty($_POST[$antiSpamFieldName]) ? 'spam' : '';
