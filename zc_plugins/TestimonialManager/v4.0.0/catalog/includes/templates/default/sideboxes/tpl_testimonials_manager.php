@@ -11,7 +11,7 @@
  * @version $Id: Testimonials Manager v3.0 5 02-20-2023 davewest $
  * Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. 
  */
-$content .= '<div id="' . str_replace('_', '-', $box_id . 'Content') . '" class="sideBoxContent">';
+$content = '<div id="' . str_replace('_', '-', $box_id . 'Content') . '" class="sideBoxContent">';
 foreach ($page_query_list as $next_item) {
     $star1 = '';
     for ($s = 1; $s <= $next_item['rating']; $s++) {
@@ -23,23 +23,24 @@ foreach ($page_query_list as $next_item) {
     }
 
     $content .=
-        '<b><a href="' . zen_href_link(FILENAME_TESTIMONIALS_MANAGER, 'testimonials_id=' . $next_item['id']) . '">' . zen_output_string_protected($next_item['name']) . '</a></b>' .
+        '<div class="center text-center">' .
+            '<b><a href="' . zen_href_link(FILENAME_TESTIMONIALS_MANAGER, 'testimonials_id=' . $next_item['id']) . '">' .
+                zen_output_string_protected($next_item['name']) .
+            '</a></b>' .
+        '</div>' .
         '<div class="testimonial">';
 
-    $content .= '<div class="buttonRow ">' . $star1 . $star2 . '</div>';
+    $content .= '<div class="buttonRow center text-center">' . $star1 . $star2 . '</div>';
 
-    if ($next_item['image'] !== '') {  
-        $content .= '<p class="testimonialImage">' . zen_image(DIR_WS_IMAGES . $next_item['image'], $next_item['name'], (int)TESTIMONIAL_IMAGE_WIDTH, (int)TESTIMONIAL_IMAGE_HEIGHT) . '</p>';  
-    }
     if (DISPLAY_TESTIMONIALS_MANAGER_TRUNCATED_TEXT === 'true') {
         $content .=
-            '<p>' .
+            '<p class="p-2">' .
                 zen_trunc_string($next_item['story'], (int)TESTIMONIALS_MANAGER_DESCRIPTION_LENGTH) .
-                '<br><span><strong>' .
+                '<p class="px-2 alignRight text-right"><strong>' .
                     '<a href="' . zen_href_link(FILENAME_TESTIMONIALS_MANAGER, 'testimonials_id=' . $next_item['id']) . '">' .
                         TESTIMONIALS_MANAGER_READ_MORE .
                     '</a>' .
-                '</strong></span>' .
+                '</strong></p>' .
             '</p>';
     }
     $content .=
@@ -48,11 +49,11 @@ foreach ($page_query_list as $next_item) {
 }
 
 if (DISPLAY_ALL_TESTIMONIALS_TESTIMONIALS_MANAGER_LINK === 'true') {
-    $content .= '<div class="bettertestimonial"><a href="' . zen_href_link(FILENAME_TESTIMONIALS_MANAGER_ALL) . '">' . TESTIMONIALS_MANAGER_DISPLAY_ALL_TESTIMONIALS . '</a></div>';
+    $content .= '<div class="tm-sb-link center text-center"><a href="' . zen_href_link(FILENAME_TESTIMONIALS_MANAGER_ALL) . '">' . TESTIMONIALS_MANAGER_DISPLAY_ALL_TESTIMONIALS . '</a></div>';
 }
 
 if (DISPLAY_ADD_TESTIMONIAL_LINK === 'true') {
-    $content .= '<div class="bettertestimonial"><a href="' . zen_href_link(FILENAME_TESTIMONIALS_ADD, '', 'SSL') . '">' . TESTIMONIALS_MANAGER_ADD_TESTIMONIALS . '</a></div>';
+    $content .= '<div class="tm-sb-link center text-center"><a href="' . zen_href_link(FILENAME_TESTIMONIALS_ADD, '', 'SSL') . '">' . TESTIMONIALS_MANAGER_ADD_TESTIMONIALS . '</a></div>';
 }
 
 $content .= '</div>';
