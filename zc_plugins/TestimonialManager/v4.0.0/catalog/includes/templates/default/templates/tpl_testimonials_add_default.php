@@ -30,24 +30,25 @@ if (TESTIMONIAL_STORE_NAME_ADDRESS === 'true') {
 <?php
 }
 
-if (($_GET['action'] ?? '') === 'success') {
+if ($action === 'success') {
 ?>
-    <div class="mainContent success"><?= TESTIMONIAL_SUCCESS ?></div>
-    <div class="buttonRow back"><?= zen_back_link() . zen_image_button(BUTTON_IMAGE_BACK, BUTTON_BACK_ALT) .'</a>' ?></div>
+    <div class="mainContent success center text-center"><?= TESTIMONIAL_SUCCESS ?></div>
+    <div class="buttonRow center text-center"><?= zen_back_link() . zen_image_button(BUTTON_IMAGE_BACK, BUTTON_BACK_ALT) .'</a>' ?></div>
 <?php
-} elseif (in_array(DEFINE_TESTIMONIAL_STATUS, ['1', '2'])) {
+} else {
+    if (in_array(DEFINE_TESTIMONIAL_STATUS, ['1', '2'])) {
 ?>
     <div id="pageThreeMainContent">
         <?php require $define_page; ?>
     </div>
 <?php
-}
+    }
 ?>
-<br class="clearBoth">
+    <br class="clearBoth">
 <?php
-if ($messageStack->size('new_testimonial') > 0) {
-    echo $messageStack->output('new_testimonial');
-}
+    if ($messageStack->size('new_testimonial') > 0) {
+        echo $messageStack->output('new_testimonial');
+    }
 ?>
     <div class="tm-wrapper"> 
         <div class="main_box">
@@ -59,31 +60,31 @@ if ($messageStack->size('new_testimonial') > 0) {
             <div class="boxcontainer">
                 <div id="reviewsWriteReviewsRate"><?= TESTIMONIAL_GIVE_RATING ?></div>
 <?php
-$stars = [];
-for ($i = 0; $i <= 5; $i++) {
-    $star1 = '';
-    for ($s = 1; $s <= $i; $s++) {
-        $star1 .= TM_STAR_SM_FULL;
+    $stars = [];
+    for ($i = 0; $i <= 5; $i++) {
+        $star1 = '';
+        for ($s = 1; $s <= $i; $s++) {
+            $star1 .= TM_STAR_SM_FULL;
+        }
+        $star2 = '';
+        for ($r = $i; $r <= 4; $r++) {
+            $star2 .= TM_STAR_SM_EMPTY;
+        }
+        $stars[] = $star1 . $star2;
     }
-    $star2 = '';
-    for ($r = $i; $r <= 4; $r++) {
-        $star2 .= TM_STAR_SM_EMPTY;
-    }
-    $stars[] = $star1 . $star2;
-}
 ?>
                 <div id="star-rating">
 <?php
-for ($rating_value = 5; $rating_value >= 0; $rating_value--) {
-    $star = $stars[$rating_value];
-    $rating_title = constant("TEXT_RATING_$rating_value");
+    for ($rating_value = 5; $rating_value >= 0; $rating_value--) {
+        $star = $stars[$rating_value];
+        $rating_title = constant("TEXT_RATING_$rating_value");
 ?>
                 <div class="custom-control custom-radio custom-control-inline">
                     <?= zen_draw_radio_field('rating', (string)$rating_value, $rating === $rating_value, 'id="rating-' . $rating_value . '" class="custom-control-input"'); ?>
                     <label class="custom-control-label rating" for="rating-<?= $rating_value ?>" title="<?= $rating_title ?>"><?= $star ?></label>
                 </div>
 <?php
-}
+    }
 ?>
                 </div>
             </div>
@@ -101,7 +102,7 @@ for ($rating_value = 5; $rating_value >= 0; $rating_value--) {
                                 <div class="label"><?= TEXT_TESTIMONIALS_NAME ?></div>
                             </div>
 <?php
-if (!zen_is_logged_in() || zen_in_guest_checkout()) {
+    if (!zen_is_logged_in() || zen_in_guest_checkout()) {
 ?>
                             <i title="<?= TITLE_EMAIL ?>"><?= EXCLAMATION_CIRCLE ?></i>
                             <div>
@@ -109,10 +110,10 @@ if (!zen_is_logged_in() || zen_in_guest_checkout()) {
                                 <div class="label" for="tm-email1"><?= TEXT_TESTIMONIALS_MAIL ?> </div>
                             </div>
 <?php
-} else {
+    } else {
 ?>
                             <?= zen_draw_hidden_field('testimonials_mail', $testimonials_mail); 
-}
+    }
 ?>
                             <div>
                                 <?= zen_draw_input_field('testimonials_title', $testimonials_title, 'id="tm-title1" title="' . ALT_FIELD_TITLE . '" class="require-if-active resizeField" data-require-pair="#switch_1"') ?>
@@ -149,7 +150,7 @@ if (!zen_is_logged_in() || zen_in_guest_checkout()) {
                                 <div class="label"><?= TEXT_TESTIMONIALS_NAME ?></div>
                             </div>
 <?php
-if (!zen_is_logged_in() || zen_in_guest_checkout()) {
+    if (!zen_is_logged_in() || zen_in_guest_checkout()) {
 ?>
                             <i title="<?= TITLE_EMAIL ?>"><?= EXCLAMATION_CIRCLE ?></i>
                             <div>
@@ -157,11 +158,11 @@ if (!zen_is_logged_in() || zen_in_guest_checkout()) {
                                 <div class="label"><?= TEXT_TESTIMONIALS_MAIL ?> </div>
                             </div>
 <?php
-} else {
+    } else {
 ?>
                             <?= zen_draw_hidden_field('testimonials_mail', $testimonials_mail) ?>
 <?php
-}
+    }
 ?>
                             <div>
                                 <?= zen_draw_input_field('testimonials_title', $testimonials_title, 'id="tm-title2" title="' . ALT_FIELD_TITLE . '" class="require-if-active resizeField" data-require-pair="#switch_2"') ?>
@@ -197,7 +198,7 @@ if (!zen_is_logged_in() || zen_in_guest_checkout()) {
                                 <div class="label"><?= TEXT_TESTIMONIALS_NAME ?></div>
                             </div>
  <?php
-if (!zen_is_logged_in() || zen_in_guest_checkout()) {
+    if (!zen_is_logged_in() || zen_in_guest_checkout()) {
 ?>
                             <i title="<?= TITLE_EMAIL ?>"><?= EXCLAMATION_CIRCLE ?></i>
                             <div>
@@ -205,11 +206,11 @@ if (!zen_is_logged_in() || zen_in_guest_checkout()) {
                                 <div class="label"><?= TEXT_TESTIMONIALS_MAIL ?></div>
                             </div>
 <?php
-} else {
+    } else {
 ?>
                             <?= zen_draw_hidden_field('testimonials_mail', $testimonials_mail) ?>
 <?php
-}
+    }
 ?>
                             <div>
                                 <?= zen_draw_input_field('testimonials_title', $testimonials_title, 'id="tm-title3" title="' . ALT_FIELD_TITLE . '" class="require-if-active resizeField" data-require-pair="#switch_3"') ?>
@@ -244,7 +245,7 @@ if (!zen_is_logged_in() || zen_in_guest_checkout()) {
                                 <div class="label"><?= TEXT_TESTIMONIALS_NAME ?></div>
                             </div>
 <?php
-if (!zen_is_logged_in() || zen_in_guest_checkout()) {
+    if (!zen_is_logged_in() || zen_in_guest_checkout()) {
 ?>
                             <i title="<?= TITLE_EMAIL ?>"><?= EXCLAMATION_CIRCLE ?></i>
                             <div>
@@ -252,11 +253,11 @@ if (!zen_is_logged_in() || zen_in_guest_checkout()) {
                                 <div class="label"><?= TEXT_TESTIMONIALS_MAIL ?></div>
                             </div>
 <?php
-} else {
+    } else {
 ?>
                             <?= zen_draw_hidden_field('testimonials_mail', $testimonials_mail) ?>
 <?php
-}
+    }
 ?> 
                             <div>
                                 <?= zen_draw_input_field('testimonials_title', $testimonials_title, 'id="tm-title4" title="' . ALT_FIELD_TITLE . '" class="require-if-active resizeField" data-require-pair="#switch_4"') ?>
@@ -300,7 +301,7 @@ if (!zen_is_logged_in() || zen_in_guest_checkout()) {
                                 <div class="label"><?= TEXT_TESTIMONIALS_NAME ?></div>
                             </div>
 <?php
-if (!zen_is_logged_in() || zen_in_guest_checkout()) {
+    if (!zen_is_logged_in() || zen_in_guest_checkout()) {
 ?>
                             <i title="<?= TITLE_EMAIL ?>"><?= EXCLAMATION_CIRCLE ?></i>
                             <div>
@@ -308,11 +309,11 @@ if (!zen_is_logged_in() || zen_in_guest_checkout()) {
                                 <div class="label"><?= TEXT_TESTIMONIALS_MAIL ?></div>
                             </div>
 <?php
-} else {
+    } else {
 ?>
                             <?= zen_draw_hidden_field('testimonials_mail', $testimonials_mail) ?>
 <?php
-}
+    }
 ?>
                             <div>
                                 <?= zen_draw_input_field('testimonials_title', $testimonials_title, 'id="tm-title6" title="' . ALT_FIELD_TITLE . '" class="require-if-active resizeField" data-require-pair="#switch_5"') ?>
@@ -354,7 +355,7 @@ if (!zen_is_logged_in() || zen_in_guest_checkout()) {
                             </div>
                         </div> 
 <?php
-if (DISPLAY_ADD_IMAGE === 'on') {
+    if (DISPLAY_ADD_IMAGE === 'on') {
 ?>
                         <div id="clear-box" class="box center text-center">
                             <p class="guidelines"><?= TEXT_FIELD_FEEDBACK_IMAGE ?></p>
@@ -430,13 +431,13 @@ $('#file-reset').on('click', function(e) {
 });
 </script>
 <?php
-}
+    }
 ?>
                         <?= zen_draw_input_field($antiSpamFieldName, '', ' size="40" id="CUAS" style="visibility:hidden; display:none;" autocomplete="off"') ?>
 <?php
-$postme = '';
-if (DISPLAY_PRIVACY_CONDITIONS === 'true') {
-    $postme = 'postme';
+    $postme = '';
+    if (DISPLAY_PRIVACY_CONDITIONS === 'true') {
+        $postme = 'postme';
 ?>
                         <div class="switch-footer">
                             <div class="switch-title"><?= TEXT_PRIVACY_CONFIRM ?></div>
@@ -444,7 +445,7 @@ if (DISPLAY_PRIVACY_CONDITIONS === 'true') {
                             <label for="privacy_left" class="inputLabel"><?= TEXT_AGREE ?></label>
                         </div>
 <?php
-}
+    }
 ?>
                     </div>
                 </div>
@@ -509,4 +510,7 @@ $(document).ready(function () {
 </script>
     </div>
     <?= '</form>' ?>
+<?php
+}
+?>
 </div>

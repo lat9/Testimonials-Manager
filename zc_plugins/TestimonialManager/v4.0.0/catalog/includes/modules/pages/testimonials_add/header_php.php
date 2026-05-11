@@ -39,10 +39,10 @@ $testimonials_title = '';
 $testimonials_html_text = '';
 
 $ordered = '';
-
+$action = $_GET['action'] ?? '';
 $error = false; //- No errors, initially
 
-if (($_GET['action'] ?? '') === 'send') {
+if ($action === 'send') {
     //saved in database table
     $rating = (int)($_POST['rating'] ?? ''); //stars 0-5
     $feedback = zen_db_prepare_input($_POST['feedback'] ?? ''); //label of selected group
@@ -55,7 +55,7 @@ if (($_GET['action'] ?? '') === 'send') {
     //footer lines
     $contact_user = zen_db_prepare_input($_POST['contact_3'] ?? '');    //email, no, phone 
     $user_phone = !empty($_POST['telephone']) ? zen_db_prepare_input($_POST['telephone']) : '';   //123-123-1234
-    $privacy_conditions = !empty($_POST['privacy_conditions']) ? zen_db_prepare_input($_POST['privacy_conditions']) : '';    //1=checked 0=unchecked
+    $privacy_conditions = !empty($_POST['privacy_conditions']) ? (int)$_POST['privacy_conditions'] : 0;    //1=checked 0=unchecked
     $tm_zero = 0;  //Items that need for form without zero.
     $antiSpam = !empty($_POST[$antiSpamFieldName]) ? 'spam' : '';
     if (!empty($testimonials_name) && preg_match('~https?://?~', $testimonials_name)) {
@@ -121,7 +121,7 @@ if (($_GET['action'] ?? '') === 'send') {
         $messageStack->add('new_testimonial', 'Sorry, you was Banned for Spam!', 'error');
     }
 
-   if (DISPLAY_PRIVACY_CONDITIONS === 'true' && $privacy_conditions !== '1') {
+   if (DISPLAY_PRIVACY_CONDITIONS === 'true' && $privacy_conditions !== 1) {
         $error = true;
         $messageStack->add('new_testimonial', ERROR_PRIVACY_STATEMENT_NOT_ACCEPTED, 'error');
     }
@@ -142,7 +142,7 @@ if (($_GET['action'] ?? '') === 'send') {
         $messageStack->add('new_testimonial', ERROR_TESTIMONIALS_TEXT_MAX_LENGTH, 'error');  
     }
   
-    if ($contact_user === TEXT_FIELD_CONTACT_PHONE && strlen($user_phone) < (int)ENTRY_TELEPHONE_MIN_LENGTH) {
+    if ($contact_user === 'phone' && strlen($user_phone) < (int)ENTRY_TELEPHONE_MIN_LENGTH) {
         $error = true;
         $messageStack->add('new_testimonial', ENTRY_TELEPHONE_NUMBER_ERROR, 'error');
     }
@@ -152,7 +152,7 @@ if (($_GET['action'] ?? '') === 'send') {
         $messageStack->add('new_testimonial', TESTIMONIAL_RATING, 'error');
     }
   
-    if ($contact_user !== TEXT_NO && $contact_user !== TEXT_FIELD_CONTACT_EMAIL && $contact_user != TEXT_FIELD_CONTACT_PHONE) {
+    if (!in_array($contact_user, ['no', 'email', 'phone'], true)) {
         $error = true;
         $messageStack->add('new_testimonial', ERROR_CONTACT_USER, 'error');
     }
@@ -179,7 +179,6 @@ if (($_GET['action'] ?? '') === 'send') {
                 'testimonials_title' => $testimonials_title,
                 'testimonials_name' => $testimonials_name,
                 'testimonials_html_text' => $testimonials_html_text,
-                'testimonials_image' => $testimonials_avatar,
                 'testimonials_upimg' => $file,
                 'testimonials_mail' => $testimonials_mail,
                 'tm_rating' => (int)$rating,
@@ -228,6 +227,7 @@ if (($_GET['action'] ?? '') === 'send') {
             if (!empty($user_phone)) {
                 $text_message .= OFFICE_LOGIN_PHONE . "\t" . $user_phone . "\n";
             }
+
             $text_message .=
                 "\n" .
                 EMAIL_TEXT . "\n" .
@@ -237,13 +237,12 @@ if (($_GET['action'] ?? '') === 'send') {
                 $extra_info['TEXT'];
       
             // Prepare HTML-portion of message
-            $html_msg['EMAIL_NAME'] = EMAIL_GREET . $testimonials_name;
             $html_msg['EMAIL_MESSAGE_HTML'] = $testimonials_html_text;
             $html_msg['EXTRA_INFO'] = $extra_info['HTML'];
             // Send message
 
             //send email to message to admin or not  
-            zen_mail($send_to_name, $send_to_email, EMAIL_SUBJECT, $text_message, $testimonials_name, $testimonials_mail, $html_msg, 'testimonial_add');
+            zen_mail($send_to_name, $send_to_email, EMAIL_SUBJECT, $text_message, $testimonials_name, $testimonials_mail, $html_msg, 'default');
 
             zen_redirect(zen_href_link(FILENAME_TESTIMONIALS_ADD, 'action=success'));      
         }
