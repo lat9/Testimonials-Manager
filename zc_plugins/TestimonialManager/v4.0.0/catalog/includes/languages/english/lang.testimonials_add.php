@@ -22,11 +22,10 @@ $define = [
 
     'BUTTON_RESET_IMAGE' => 'Reset Image',
 
-    'EMAIL_GREET' => 'Dear ',
     'EMAIL_OWNER_SUBJECT' => 'Testimonial submission at ' . STORE_NAME,
     'EMAIL_SEPARATOR' => '--------------------------',
     'EMAIL_SUBJECT' => 'Your Testimonial Submission At ' . STORE_NAME,
-    'EMAIL_TEXT' => 'Your testimonial has been successfully submitted at ' . STORE_NAME . '. It will be added to our other testimonials as soon as we approve it. You will receive an email about the status of your submittal. If you have not received the email within the next 48 hours, please contact us before submitting your testimonial again.' . "\n\n",
+    'EMAIL_TEXT' => 'Your testimonial has been successfully submitted at ' . STORE_NAME . ' and will be added to our other testimonials once we approve it. You will receive an email about the status of your submittal. If you have not received the email within the next 48 hours, please contact us before submitting your testimonial again.' . "\n",
     'EMAIL_DISCLAIMER_NEW_CUSTOMER' => 'This testimonial was submitted to us by you or by one of our users. If you did not submit a testimonial, or feel that you have received this email in error, please send an email to %s ',
 
     'EXCLAMATION_CIRCLE' => '<svg xmlns="http://www.w3.org/2000/svg" fill="rgba(0.0.0,1)" width="15px" height="auto" viewBox="0 0 512 512"><path d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/></svg>',
