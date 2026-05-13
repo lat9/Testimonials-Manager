@@ -64,11 +64,26 @@ class ScriptedInstaller extends ScriptedInstallBase
 
                 ('Testimonial - Show Store Name and Address', 'TESTIMONIAL_STORE_NAME_ADDRESS', 'true', 'Include Store Name and Address', $cgi, 18, NOW(), NULL, 'zen_cfg_select_option([''true'', ''false''], ', NULL),
 
-                ('Define Testimonial','DEFINE_TESTIMONIAL_STATUS', '1', 'Enable the Defined Testimonial Text?<br>0= Link ON, Define Text OFF<br>1= Link ON, Define Text ON<br>2= Link OFF, Define Text ON<br>3= Link OFF, Define Text OFF', $cgi, 19, NOW(), NULL, 'zen_cfg_select_option(array(''0'', ''1'', ''2'', ''3''), ', NULL),
+                ('Define Testimonial', 'DEFINE_TESTIMONIAL_STATUS', '3', 'Enable the Defined Testimonial Text?<br>0= Link ON, Define Text OFF<br>1= Link ON, Define Text ON<br>2= Link OFF, Define Text ON<br>3= Link OFF, Define Text OFF', $cgi, 19, NOW(), NULL, 'zen_cfg_select_option(array(''0'', ''1'', ''2'', ''3''), ', NULL),
 
                 ('Testimonial Text Maximum Length', 'ENTRY_TESTIMONIALS_TEXT_MAX_LENGTH', '1000', 'Maximum length of Testimonial description.', $cgi, 20, NOW(), NULL, NULL, NULL)";
  
         $this->executeInstallerSql($sql);
+        
+        // -----
+        // Remove any previous TM version's version setting; if previously set, change the define-page status to "off".
+        //
+        $this->executeInstallerSql(
+            "DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'TM_VERSION' LIMIT 1"
+        );
+        if (defined('TM_VERSION')) {
+            $this->executeInstallerSql(
+                "UPDATE " . TABLE_CONFIGURATION . "
+                    SET configuration_value = '3'
+                  WHERE configuration_key = 'DEFINE_TESTIMONIAL_STATUS'
+                  LIMIT 1"
+            );
+        }
 
         // Admin Menu for Testimonial Manager Configuration Menu
         zen_deregister_admin_pages('TMConfig');
