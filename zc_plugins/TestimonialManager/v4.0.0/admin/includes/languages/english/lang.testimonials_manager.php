@@ -12,7 +12,7 @@
     'HEADING_TITLE' => 'Testimonials Manager',
 
     'ENTRY_DATE_ADDED_TEXT' => '&nbsp;(i.e. 05/21/1970)',
-
+    'ERROR_INVALID_DATE' => 'The &quot;Date Added&quot; date is not valid, please re-enter.',
     'ERROR_NO_SELECTIONS_FOR_DELETE' => 'No testimonials were selected for removal, please try again.',
     'ERROR_PAGE_AUTHOR_REQUIRED' => 'The <em>Author\'s Name</em> is required.',
     'ERROR_PAGE_EMAIL_REQUIRED' => 'The <em>Author\'s E-mail</em> is required.',
@@ -44,7 +44,6 @@
     'TEXT_DATE_TESTIMONIALS_LAST_MODIFIED' => 'Last Modified:',
 
     'TEXT_TESTIMONIALS_DATE' => 'Date Added:',
-    'TEXT_TESTIMONIALS_DATE_INFO' => '<strong>Leaving the Date Added Field empty will insert today\'s date or you can enter the date of any past testimonials.</strong>',
     'TEXT_TESTIMONIALS_HTML_TEXT' => 'Testimonial:<br><br>Use plain text only; HTML tags will be sanitized.',
     'TEXT_TESTIMONIALS_MAIL' => 'Author\'s E-Mail:',
     'TEXT_TESTIMONIALS_NAME' => 'Author\'s Name:',

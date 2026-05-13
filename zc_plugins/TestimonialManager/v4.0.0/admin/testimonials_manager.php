@@ -125,26 +125,34 @@ switch ($action) {
         if ($upimg->parse() && $upimg->save()) {
             $upimg_name = zen_db_input($_POST['img_dir'] . $upimg->filename);
         }
-        if ($upimg->filename !== 'none' && $upimg->filename != '') {
+        if ($upimg->filename !== 'none' && $upimg->filename !== '') {
             // save filename when not set to none and not blank
             $db_filename = zen_limit_image_filename($upimg_name, TABLE_TESTIMONIALS_MANAGER, 'testimonials_upimg');
             $sql_data_array['testimonials_upimg'] = $db_filename;
         }
 
         if ($action === 'insert') {
-            if (empty($_POST['date_added'])) {
-                $testimonials_date = 'now()';
-            } else  {
-                $testimonials_date = zen_db_prepare_input($_POST['date_added']);
-                if (DATE_FORMAT_DATE_PICKER != 'yy-mm-dd') {
+            $date_added_raw = zen_db_prepare_input($_POST['date_added']);
+            if ($date_scheduled_raw === '') {
+                $date_added = 'now()';
+            } else {
+                if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($date_added_raw)) {
                     $local_fmt = zen_datepicker_format_fordate();
-                    $dt = DateTime::createFromFormat($local_fmt, $testimonials_date);
-                    $testimonials_date = $dt->format('Y-m-d');
+                    $dt = DateTime::createFromFormat($local_fmt, $date_added_raw);
+                    $date_added_raw = 'null';
+                    if (!empty($dt)) {
+                        $date_added_raw = $dt->format('Y-m-d');
+                    }
                 }
-                $testimonials_date = (date('Y-m-d') < $testimonials_date) ? $testimonials_date : 'null';
+                if (zcDate::validateDate($date_added_raw) === true) {
+                    $date_added = $date_added_raw;
+                } else {
+                    $page_error = true;
+                    $messageStack->add(ERROR_INVALID_DATE, 'error');
+                }
             }
 
-            $sql_data_array['date_added'] = $testimonials_date;
+            $sql_data_array['date_added'] = $date_added;
 
             zen_db_perform(TABLE_TESTIMONIALS_MANAGER, $sql_data_array);
             $testimonials_id = zen_db_insert_id();
@@ -262,6 +270,7 @@ if ($action === 'new') {
         $testimonials_html_text = $_POST['testimonials_html_text'] ?? '';
     }
 ?>
+        <div id="spiffycalendar" class="text"></div>
         <?= zen_draw_form('new_page', FILENAME_TESTIMONIALS_MANAGER, $page_param . '&action=' . $form_action, 'post', 'enctype="multipart/form-data" class="form-horizontal"') ?>
 <?php
         if ($form_action === 'update') {
@@ -307,10 +316,12 @@ if ($action === 'new') {
     if ($form_action === 'insert') {
 ?>
         <div class="form-group">
-            <?= zen_draw_label(TEXT_TESTIMONIALS_DATE, 'date_added', 'class="col-sm-3 control-label"') . TEXT_TESTIMONIALS_DATE_INFO ?>
+            <?= zen_draw_label(TEXT_TESTIMONIALS_DATE, 'date_added', 'class="col-sm-3 col-form-label"') ?>
             <div class="col-sm-9 col-md-6">
                 <div class="date input-group" id="datepicker">
-                    <span class="input-group-addon datepicker_icon"><?= CALENDER_ALT ?></span>
+                    <span class="input-group-addon datepicker_icon">
+                        <?= zen_icon('calendar-days', size: 'lg') ?>
+                    </span>
                     <?= zen_draw_input_field('date_added', $bInfo->date_added, 'class="form-control" id="date_added" autocomplete="off"') ?>
                 </div>
                 <span class="help-block errorText">(<?= zen_datepicker_format_full() ?>)</span>
@@ -368,14 +379,14 @@ if ($action === 'new') {
         <div class="form-group">
             <?= zen_draw_label(TEXT_HELPFUL_YES, 'helpful_yes', 'class="col-sm-3 col-form-label"') ?>
             <div class="col-sm-9 col-md-6">
-                <?= zen_draw_input_field('helpful_yes', $bInfo->helpful_yes, 'class="form-control"', false, 'number') ?>
+                <?= zen_draw_input_field('helpful_yes', $bInfo->helpful_yes, 'min="0" class="form-control"', false, 'number') ?>
             </div>
         </div>
 
         <div class="form-group">
             <?= zen_draw_label(TEXT_HELPFUL_NO, 'helpful_no', 'class="col-sm-3 col-form-label"') ?>
             <div class="col-sm-9 col-md-6">
-                <?= zen_draw_input_field('helpful_no', $bInfo->helpful_no, 'class="form-control"', false, 'number') ?>
+                <?= zen_draw_input_field('helpful_no', $bInfo->helpful_no, 'min="0" class="form-control"', false, 'number') ?>
             </div>
         </div>
 <?php
@@ -432,6 +443,12 @@ if ($action === 'new') {
             </a>
         </div>
         <?= '</form>' ?>
+    <script>
+      $(function () {
+        $('input[name="date_added"]').datepicker({
+        });
+      })
+    </script>
 <?php
 } else {    // table for admin main
     $color_approved = 'rgba(6,130,15,1)';   //- green
