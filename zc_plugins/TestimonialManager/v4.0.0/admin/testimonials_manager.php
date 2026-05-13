@@ -119,6 +119,18 @@ switch ($action) {
             'testimonials_upimg' => ''
         ];
 
+        $upimg = new upload('testimonials_upimg');
+        $upimg->set_extensions(['jpg', 'jpeg', 'png']);
+        $upimg->set_destination(DIR_FS_CATALOG_IMAGES . $_POST['img_dir']);
+        if ($upimg->parse() && $upimg->save()) {
+            $upimg_name = zen_db_input($_POST['img_dir'] . $upimg->filename);
+        }
+        if ($upimg->filename !== 'none' && $upimg->filename != '') {
+            // save filename when not set to none and not blank
+            $db_filename = zen_limit_image_filename($upimg_name, TABLE_TESTIMONIALS_MANAGER, 'testimonials_upimg');
+            $sql_data_array['testimonials_upimg'] = $db_filename;
+        }
+
         if ($action === 'insert') {
             if (empty($_POST['date_added'])) {
                 $testimonials_date = 'now()';
@@ -149,14 +161,23 @@ switch ($action) {
         zen_redirect(zen_href_link(FILENAME_TESTIMONIALS_MANAGER, $page_param . '&bID=' . $testimonials_id));
         break;
 
+    case 'delete':
+        if (!isset($_POST['delcust']) || !is_array($_POST['delcust']) || count($_POST['delcust']) === 0) {
+            $messageStack->add_session(ERROR_NO_SELECTIONS_FOR_DELETE);
+            zen_redirect(zen_href_link(FILENAME_TESTIMONIALS_MANAGER, $page_param));
+        }
+        break;
+
     case 'deleteconfirm':
-        $testimonialsID = $_SESSION['deleteTest'] ?? [];
-        $howmany = (is_array($testimonialsID)) ? count($testimonialsID) : 0;  //number of testimonials to delete
-        for ($i = 0, $n = $howmany; $i < $n; $i++) {  // Loop to get the values of individual checked checkboxes.
-            $db->Execute("DELETE FROM " . TABLE_TESTIMONIALS_MANAGER . " WHERE testimonials_id = " . (int)$testimonialsID[$i] . " LIMIT 1");
+        $to_delete = $_POST['delcust'] ?? [];
+        if (!is_array($to_delete)) {
+            $to_delete = [];
+        }
+        foreach ($to_delete as $testimonial_id) {
+            $db->Execute("DELETE FROM " . TABLE_TESTIMONIALS_MANAGER . " WHERE testimonials_id = " . (int)$testimonial_id . " LIMIT 1");
         }
 
-        $messageStack->add_session(SUCCESS_PAGE_REMOVED, 'success');
+        $messageStack->add_session(sprintf(SUCCESS_PAGE_REMOVED, count($to_delete)), 'success');
         zen_redirect(zen_href_link(FILENAME_TESTIMONIALS_MANAGER, $page_param));
         break;
 
@@ -243,7 +264,7 @@ if ($action === 'new') {
 ?>
         <?= zen_draw_form('new_page', FILENAME_TESTIMONIALS_MANAGER, $page_param . '&action=' . $form_action, 'post', 'enctype="multipart/form-data" class="form-horizontal"') ?>
 <?php
-        if ($form_action == 'update') {
+        if ($form_action === 'update') {
             echo zen_draw_hidden_field('testimonials_id', $bID);
         }
         echo zen_hide_session_id();
@@ -345,51 +366,71 @@ if ($action === 'new') {
         </div>
 
         <div class="form-group">
-            <?= zen_draw_label(TEXT_YES_VOTING, 'helpful_yes', 'class="col-sm-3 col-form-label"') ?>
+            <?= zen_draw_label(TEXT_HELPFUL_YES, 'helpful_yes', 'class="col-sm-3 col-form-label"') ?>
             <div class="col-sm-9 col-md-6">
                 <?= zen_draw_input_field('helpful_yes', $bInfo->helpful_yes, 'class="form-control"', false, 'number') ?>
             </div>
         </div>
 
         <div class="form-group">
-            <?= zen_draw_label(TEXT_NO_VOTING, 'helpful_no', 'class="col-sm-3 col-form-label"') ?>
+            <?= zen_draw_label(TEXT_HELPFUL_NO, 'helpful_no', 'class="col-sm-3 col-form-label"') ?>
             <div class="col-sm-9 col-md-6">
                 <?= zen_draw_input_field('helpful_no', $bInfo->helpful_no, 'class="form-control"', false, 'number') ?>
             </div>
         </div>
-
+<?php
+    if (!empty($bInfo->testimonials_upimg)) {
+?>
         <div class="form-group">
-            <?= zen_draw_label(TEXT_INFO_CURRENT_IMAGE, 'testimonials_upimg', 'class="col-sm-3 col-form-label"') ?>
-            <div class="col-sm-9 col-md-6">
-<?php
-    if (empty($bInfo->testimonials_upimg)) {
-?>
-                <?= TEXT_IMAGES_TESTMONIALS ?>
-<?php
-    } else {
-?>
-                <div>
-                    <?= zen_image(DIR_WS_CATALOG_IMAGES . $bInfo->testimonials_upimg, $bInfo->testimonials_title, 150, 150) ?>
-                </div>
+            <div class="col-sm-offset-3 col-sm-9 col-md-6">
+                <div><?= zen_info_image($bInfo->testimonials_upimg, $bInfo->testimonials_title, '', '', 'class="table-bordered img-responsive"') ?></div>
                 <br>
-                <?= TEXT_FILENAME . $bInfo->testimonials_upimg ?>
-                <br>
-
-                <a href="<?= zen_href_link(FILENAME_TESTIMONIALS_MANAGER, $page_param . '&bID=' . $bInfo->testimonials_id . '&action=imagedelete') ?>" onclick="confirm('<?= TEXT_INFO_DELETE_IMAGE ?>') && document.imagedelete.submit(); return false" class="btn btn-warning" role="button">
-                    <?= IMAGE_DELETE ?>
-                </a>
 <?php
-    }
+        if (is_file(DIR_FS_CATALOG_IMAGES . $bInfo->testimonials_upimg)) {
+            [$width, $height] = getimagesize(DIR_FS_CATALOG_IMAGES . $bInfo->testimonials_upimg);
+            $kb = filesize(DIR_FS_CATALOG_IMAGES . $bInfo->testimonials_upimg) / 1024;
+        }
+        echo sprintf(TEXT_FILENAME, '/' . DIR_WS_IMAGES . $bInfo->testimonials_upimg, $width ?? 0, $height ?? 0, $kb ?? 0);
 ?>
             </div>
         </div>
+        <div class="form-group">
+            <p class="col-sm-3 control-label"><?= TEXT_IMAGES_DELETE ?></p>
+            <div class="col-sm-9 col-md-6">
+                <label class="radio-inline"><?= zen_draw_radio_field('image_delete', '0', true) . TABLE_HEADING_NO ?></label>
+                <label class="radio-inline"><?= zen_draw_radio_field('image_delete', '1', false) . TABLE_HEADING_YES ?></label>
+            </div>
+        </div>
+<?php
+    }
+?>
+        <div class="form-group">
+            <p class="col-sm-3 control-label"><strong><?= TEXT_EDIT_IMAGE ?></strong></p>
+            <div class="col-sm-9 col-md-6">
+                <?= zen_draw_file_field('testimonials_upimg', '', 'class="form-control"') ?>
+            </div>
+        </div>
+<?php
+    $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
+    if (empty($bInfo->testimonials_upimg)) {
+        $default_directory = '';
+    } else {
+        $default_directory = pathinfo($bInfo->testimonials_upimg, PATHINFO_DIRNAME);
+    }
+?>
+        <div class="form-group">
+            <?= zen_draw_label(TEXT_IMAGE_DIR, 'image-dir', 'class="col-sm-3 control-label"') ?>
+            <div class="col-sm-9 col-md-6">
+                <?= zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control" id="img-dir"') ?>
+            </div>
+        </div>
 
-        <span class="floatButton text-right">
+        <div class="floatButton text-right">
             <?= ($form_action === 'insert') ? '<button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button>' : '<button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button>' ?>
             <a href="<?= zen_href_link(FILENAME_TESTIMONIALS_MANAGER, $page_param . (isset($_GET['bID']) ? '&bID=' . $_GET['bID'] : '')) ?>" class="btn btn-default ms-2" role="button">
                 <?= IMAGE_CANCEL ?>
             </a>
-        </span>
+        </div>
         <?= '</form>' ?>
 <?php
 } else {    // table for admin main
@@ -398,38 +439,49 @@ if ($action === 'new') {
     $color_banned = 'rgba(255,0,0,1)';      //- red
 ?>
         <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">    
-                <div id="status-legend" class="col-md-4 d-flex">
-                    <span><?= STATUS_APPROVED . '&nbsp;' . sprintf(CIRCLE_FORMAT, $color_approved, '18px') . USER_CIRCLE ?></span>
-                    <span><?=STATUS_PENDING . '&nbsp;' . sprintf(CIRCLE_FORMAT, $color_pending, '18px') . USER_CIRCLE ?></span>
-                    <span><?= STATUS_BANNED . '&nbsp;' . sprintf(CIRCLE_FORMAT, $color_banned, '18px') . USER_CIRCLE ?></span>
-                </div>
+            <div id="status-legend" class="col-md-4 d-flex">
+                <span><?= STATUS_APPROVED . '&nbsp;' . sprintf(CIRCLE_FORMAT, $color_approved, '18px') . USER_CIRCLE ?></span>
+                <span><?= STATUS_PENDING . '&nbsp;' . sprintf(CIRCLE_FORMAT, $color_pending, '18px') . USER_CIRCLE ?></span>
+                <span><?= STATUS_BANNED . '&nbsp;' . sprintf(CIRCLE_FORMAT, $color_banned, '18px') . USER_CIRCLE ?></span>
+            </div>
 
-                <div class="col-md-5">
-                    <?= zen_draw_form('set_editor_form', FILENAME_TESTIMONIALS_MANAGER, '', 'get', 'class="form-horizontal"') ?>
-                    <div class="form-group">
-                        <?= zen_draw_label(TEXT_EDITOR_INFO, 'reset_editor', 'class="col-sm-6 col-md-4 control-label"') ?>
-                        <div class="col-sm-6 col-md-8">
-                            <?= zen_draw_pull_down_menu('reset_editor', $editors_pulldown, $current_editor_key, 'onchange="this.form.submit();" class="form-control" id="reset_editor"') ?>
-                        </div>
-                        <?= zen_hide_session_id() ?>
-                        <?= zen_draw_hidden_field('action', 'set_editor') ?>
-                        <?= (isset($_GET['bID']) ? zen_draw_hidden_field('bID', (int)$_GET['bID']) : '') ?>
-                        <?= ($pagenum > 1) ? zen_draw_hidden_field('page', $pagenum) : '' ?>
+            <div class="col-md-4"></div>
+
+            <div class="col-md-4">
+                <?= zen_draw_form('set_editor_form', FILENAME_TESTIMONIALS_MANAGER, '', 'get', 'class="form-horizontal"') ?>
+                <div class="form-group">
+                    <?= zen_draw_label(TEXT_EDITOR_INFO, 'reset_editor', 'class="col-sm-6 col-md-4 control-label"') ?>
+                    <div class="col-sm-6 col-md-8">
+                        <?= zen_draw_pull_down_menu('reset_editor', $editors_pulldown, $current_editor_key, 'onchange="this.form.submit();" class="form-control" id="reset_editor"') ?>
                     </div>
-                    <?= '</form>' ?>
+                    <?= zen_hide_session_id() ?>
+                    <?= zen_draw_hidden_field('action', 'set_editor') ?>
+                    <?= (isset($_GET['bID']) ? zen_draw_hidden_field('bID', (int)$_GET['bID']) : '') ?>
+                    <?= ($pagenum > 1) ? zen_draw_hidden_field('page', $pagenum) : '' ?>
                 </div>
+                <?= '</form>' ?>
+            </div>
+        </div>
 
-                <?= zen_draw_form('delform', FILENAME_TESTIMONIALS_MANAGER, 'action=confirm', 'post', '', true) ?>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
+                <?= zen_draw_form('delform', FILENAME_TESTIMONIALS_MANAGER, 'action=delete', 'post', '', true) ?>
                 <table class="table table-hover">
                     <thead>
                         <tr class="dataTableHeadingRow">
-                            <th class="dataTableHeadingContent"><?= TABLE_HEADING_ID ?></th>
+                            <th class="dataTableHeadingContent text-center"><?= TABLE_HEADING_ID ?></th>
                             <th class="dataTableHeadingContent text-center">
-                                <input type="checkbox" name="select-all" id="select-all">
-                                <label class="checkboxLabel" for="quote_file">
+<?php
+    if ($action !== 'delete') {
+?>
+                                <label class="checkboxLabel" for="select-all">
                                     <?= TABLE_HEADING_DELETE ?>
                                 </label>
+                                <br>
+                                <input type="checkbox" name="select-all" id="select-all">
+<?php
+    }
+?>
                             </th>
                             <th class="dataTableHeadingContent"><?= TABLE_HEADING_TESTIMONIALS ?></th>
                             <th class="dataTableHeadingContent hidden-sm hidden-xs"><?= TABLE_HEADING_NAME ?></th>
@@ -446,29 +498,23 @@ if ($action === 'new') {
     $testimonials_split = new splitPageResults($pagenum, MAX_DISPLAY_SEARCH_RESULTS, $testimonials_query_raw, $testimonials_query_numrows);
     $testimonials = $db->Execute($testimonials_query_raw);
 
+    $delete_disabled = ($action === 'delete') ? 'disabled' : '';
+    $delete_list = (isset($_POST['delcust']) && is_array($_POST['delcust'])) ? $_POST['delcust'] : [];
     foreach ($testimonials as $testimonial) {
         $testimonial_id = (int)$testimonial['testimonials_id'];
         if ((!isset($_GET['bID']) || (int)$_GET['bID'] === $testimonial_id) && !isset($bInfo) && $action !== 'new') {
             $bInfo_array = array_merge($testimonial);
             $bInfo = new objectInfo($bInfo_array);
         }
- 
-        /*** Cowboygeek delete customer re-write get id's from delcust[] *********/
-        $howmany = count($_POST['delcust'] ?? []);  //number of links to delete
-        if ($howmany !== 0) {  
-            foreach ($_POST['delcust'] as $next_id) {
-                $testimonialsID[] = $next_id;  //feed any ID's into an array
-            }
-        }
 ?>
                         <tr class="dataTableHeadingRow">
-                            <td class="dataTableContent"><?= $testimonial_id ?></td>
+                            <td class="dataTableContent text-center"><?= $testimonial_id ?></td>
                             <td class="dataTableContent text-center">
 <?php
         // Create the delete checkbox and manage the checks
-        $tof = (is_array($testimonialsID) && in_array($testimonial_id, $testimonialsID));
+        $tof = in_array($testimonial_id, $delete_list);
 ?>
-                                <?= zen_draw_checkbox_field('delcust[]', $testimonial_id, $tof) ?>
+                                <?= zen_draw_checkbox_field('delcust[]', $testimonial_id, $tof, '', $delete_disabled) ?>
                             </td>
                             <td class="dataTableContent"><?= zen_output_string_protected($testimonial['testimonials_title']) ?></td>
                             <td class="dataTableContent hidden-sm hidden-xs"><?= zen_output_string_protected($testimonial['testimonials_name']) ?></td>
@@ -562,13 +608,18 @@ if ($action === 'new') {
                         <?= $testimonials_split->display_links($testimonials_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $pagenum, zen_get_all_get_params(['page', 'info', 'x', 'y', 'lID'])) ?>
                     </div>
                 </div>
-
+<?php
+    if ($action !== 'delete') {
+?>
                 <div class="text-center mt-3">
-                    <button type="submit" class="btn btn-danger me-2">Delete Testimonials</button>
+                    <button type="submit" class="btn btn-danger me-2"><?= BUTTON_DELETE_SELECTED ?></button>
                     <a href="<?= zen_href_link(FILENAME_TESTIMONIALS_MANAGER, 'action=new') ?>" class="btn btn-primary" role="button">
                         <?= IMAGE_NEW_PAGE ?>
                     </a>
                 </div>
+<?php
+    }
+?>
                 <?= '</form>' ?>
             </div>
 
@@ -577,25 +628,29 @@ if ($action === 'new') {
     $heading = [];
     $contents = [];
     switch ($action) {
-        case 'confirm':
-            $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_DELETE_TESTIMONIALS . '</h4>'];
-
-            $_SESSION['deleteTest'] = $testimonialsID;
-
-            if ($howmany === 0) {
-                $contents[] = ['align' => 'text-center', 'text' => '<br><a href="' . zen_href_link(FILENAME_TESTIMONIALS_MANAGER) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
-                break;
-            }
+        case 'delete':
+            $heading[] = ['text' => '<b>' . TEXT_INFO_HEADING_DELETE_TESTIMONIALS . '</b>'];
 
             $contents = ['form' => zen_draw_form('testimonials', FILENAME_TESTIMONIALS_MANAGER, $page_param . '&bID=' . $bInfo->testimonials_id . '&action=deleteconfirm', 'post', '', true)];
-            foreach ($testimonialsID as $testimonial) {
-                $tm_query = "SELECT testimonials_name, testimonials_mail FROM " . TABLE_TESTIMONIALS_MANAGER . " WHERE testimonials_id = " . (int)$testimonial;
+            $contents[] = ['text' => TEXT_INFO_DELETE_INTRO];
+
+            $index = 0;
+            $to_delete_list = '';
+            foreach ($delete_list as $testimonial_id) {
+                $tm_query = "SELECT testimonials_name, testimonials_mail FROM " . TABLE_TESTIMONIALS_MANAGER . " WHERE testimonials_id = " . (int)$testimonial_id;
                 $tm_info = $db->Execute($tm_query, 1);
                 if ($tm_info->EOF) {
                     continue;
                 }
-                $contents[] = ['text' => TEXT_INFO_DELETE_INTRO . '<br><b>ID# ' . $testimonialsID[$i] . ' ' . $tm_info->fields['testimonials_name'] . ' ' . $tm_info->fields['testimonials_mail'] . '</b>'];
+                $to_delete_list .=
+                    '<li class="mb-1"><b>ID# ' . $testimonial_id . ' ' .
+                    zen_output_string_protected($tm_info->fields['testimonials_name']) . ' ' .
+                    zen_output_string_protected($tm_info->fields['testimonials_mail']) .
+                    '</b>' . zen_draw_hidden_field("delcust[$index]", $testimonial_id) . '</li>';
+                $index++;
             }
+            $contents[] = ['text' => '<ul>' . $to_delete_list . '</ul>'];
+
             $contents[] = ['align' => 'center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_TESTIMONIALS_MANAGER) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
             break;
 
@@ -605,7 +660,7 @@ if ($action === 'new') {
             }
 
             $bInfo->testimonials_title = zen_output_string_protected($bInfo->testimonials_title);
-            $heading[] = ['text' => '<b>' . $bInfo->testimonials_title . '</b>'];
+            $heading[] = ['text' => '<h4>' . $bInfo->testimonials_title . '</h4>'];
 
             $contents[] = [
                 'align' => 'center',
@@ -614,7 +669,7 @@ if ($action === 'new') {
 
             $contents[] = ['text' => '<b>' . TEXT_INFO_TESTIMONIALS_STATUS . '</b> '  . ((int)$bInfo->status === 0 ? TEXT_TM_STATUS_0 : TEXT_TM_STATUS_1)];
             $contents[] = ['text' => '<b>' . TEXT_INFO_TESTIMONIALS_RATING . '</b> ' . str_repeat(zen_icon('star-shadow', size: 'lg'), (int)$bInfo->tm_rating)];
-            $contents[] = ['text' => '<b>' . TEXT_INFO_TESTIMONIALS_PUBLIC  . '</b> ' . ($bInfo->tm_make_public === 'yes' ? TEXT_YES : TEXT_NO) . '</b>'];
+            $contents[] = ['text' => '<b>' . TEXT_INFO_TESTIMONIALS_PUBLIC  . '</b> ' . ($bInfo->tm_make_public === 'yes' ? TEXT_YES : TEXT_NO)];
 
             if (!empty($bInfo->tm_feedback)) {
                 $contents[] = ['text' => '<b>' . TEXT_INFO_TESTIMONIALS_FEEDBACK . '</b> ' . zen_output_string_protected($bInfo->tm_feedback)];
@@ -631,34 +686,17 @@ if ($action === 'new') {
             }
 
             $contents[] = ['text' => '<b>' . TEXT_INFO_TESTIMONIALS_PRIVACY . '</b> ' . ((int)$bInfo->tm_privacy_conditions === 1 ? TEXT_YES : TEXT_NO)];
-            $contents[] = ['text' => '<b>' . TEXT_YES_VOTING . '</b> ' . $bInfo->helpful_yes];
-            $contents[] = ['text' => '<b>' . TEXT_NO_VOTING . '</b> ' . $bInfo->helpful_no];
+            $contents[] = ['text' => '<b>' . TEXT_HELPFUL . '</b>' . ' ' . sprintf(TEXT_HELPFUL_YES_NO, $bInfo->helpful_yes, $bInfo->helpful_no)];
             $contents[] = ['text' => '<b>' . TEXT_INFO_TESTIMONIALS_GEN_INFO . '</b><br>' . nl2br(zen_output_string_protected($bInfo->tm_gen_info), false)];
-            $contents[] = ['text' => '<br>' . TEXT_INFO_TESTIMONIALS_SUBMIT_IMAGE . '<br>' . $bInfo->testimonials_upimg];
+            $contents[] = ['text' => '<b>' . TEXT_INFO_TESTIMONIALS_SUBMIT_IMAGE . '</b> ' . (!empty($bInfo->testimonials_upimg) ? $bInfo->testimonials_upimg : TEXT_INFO_NO_IMAGE)];
             if (!empty($bInfo->testimonials_upimg)) {
                 $contents[] = ['text' => zen_image(DIR_WS_CATALOG_IMAGES . $bInfo->testimonials_upimg, $bInfo->testimonials_title, 150)];
-            } else {
-                $contents[] = ['text' => '<br>' . TEXT_IMAGE_NONEXISTENT];
             }
 
             $contents[] = ['text' => '<b>' . TEXT_DATE_TESTIMONIALS_CREATED . '</b> ' . zen_date_short($bInfo->date_added)];
 
             if (!empty($bInfo->last_update)) {
                 $contents[] = ['text' => '<b>' . TEXT_DATE_TESTIMONIALS_LAST_MODIFIED . '</b> ' . zen_date_short($bInfo->last_update)];
-            }
-
-            if ($bInfo->date_scheduled) {
-                $contents[] = ['text' => '<br>' . sprintf(TEXT_TESTIMONIALS_SCHEDULED_AT_DATE, zen_date_short($bInfo->date_scheduled))];
-            }
-
-            if ($bInfo->expires_date) {
-                $contents[] = ['text' => '<br>' . sprintf(TEXT_TESTIMONIALS_EXPIRES_AT_DATE, zen_date_short($bInfo->expires_date))];
-            } elseif ($bInfo->expires_impressions) {
-                $contents[] = ['text' => '<br>' . sprintf(TEXT_TESTIMONIALS_EXPIRES_AT_IMPRESSIONS, $bInfo->expires_impressions)];
-            }
-
-            if ($bInfo->date_status_change) {
-                $contents[] = ['text' => '<br>' . sprintf(TEXT_TESTIMONIALS_STATUS_CHANGE, zen_date_short($bInfo->date_status_change))];
             }
             break;
     }
