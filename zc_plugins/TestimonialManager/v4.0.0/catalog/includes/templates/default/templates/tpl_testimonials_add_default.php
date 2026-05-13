@@ -26,14 +26,13 @@ include $template->get_template_dir('/tpl_tm_total_reviews.php', DIR_WS_TEMPLATE
 if (TESTIMONIAL_STORE_NAME_ADDRESS === 'true') {
 ?>
     <address><?= nl2br(STORE_NAME_ADDRESS, false) ?></address>
-    <br class="clearBoth">
 <?php
 }
 
 if ($action === 'success') {
 ?>
     <div class="mainContent success center text-center"><?= TESTIMONIAL_SUCCESS ?></div>
-    <div class="buttonRow center text-center"><?= zen_back_link() . zen_image_button(BUTTON_IMAGE_BACK, BUTTON_BACK_ALT) .'</a>' ?></div>
+    <div class="buttonRow center text-center mt-2"><?= zen_back_link() . zen_image_button(BUTTON_IMAGE_BACK, BUTTON_BACK_ALT) .'</a>' ?></div>
 <?php
 } else {
     if (in_array(DEFINE_TESTIMONIAL_STATUS, ['1', '2'])) {
@@ -93,7 +92,7 @@ if ($action === 'success') {
             <div class="answersection">
                 <div class="switch-field">
 <!-- online shopping experience switch_1 //-->      
-                    <div class="switch-wrap">
+                    <div id="wrap-1" class="switch-wrap">
                         <?= zen_draw_radio_field('feedback', LABEL_FEEDBACK_1, '', 'id="switch-1"') ?>
                         <label for="switch-1"><?= LABEL_FEEDBACK_1 ?></label>
                         <div class="reveal-if-active go-up"> 
@@ -141,7 +140,7 @@ if ($action === 'success') {
                     </div>
        
 <!-- online order experience switch_2 //-->
-                    <div class="switch-wrap">
+                    <div id="wrap-2" class="switch-wrap">
                         <?= zen_draw_radio_field('feedback', LABEL_FEEDBACK_2, '', 'id="switch_2"') ?>
                         <label for="switch_2"><?= LABEL_FEEDBACK_2 ?></label>
                         <div class="reveal-if-active go-up"> 
@@ -189,7 +188,7 @@ if ($action === 'success') {
                         </div>
                     </div>
 <!-- Mobile shopping experience switch_3 //-->
-                    <div class="switch-wrap">
+                    <div id="wrap-3" class="switch-wrap">
                         <?= zen_draw_radio_field('feedback', LABEL_FEEDBACK_3, '', 'id="switch_3"') ?>
                         <label for="switch_3"><?= LABEL_FEEDBACK_3 ?></label>
                         <div class="reveal-if-active go-up"> 
@@ -236,7 +235,7 @@ if ($action === 'success') {
                         </div>
                     </div>
 <!-- Store Experience switch_4 //-->
-                    <div class="switch-wrap">
+                    <div id="wrap-4" class="switch-wrap">
                         <?= zen_draw_radio_field('feedback', LABEL_FEEDBACK_4, '', 'id="switch_4"') ?>
                         <label for="switch_4"><?= LABEL_FEEDBACK_4 ?></label>
                         <div class="reveal-if-active go-up"> 
@@ -292,7 +291,7 @@ if ($action === 'success') {
                         </div>
                     </div>
  <!-- Other feedback switch_5 //-->
-                    <div class="switch-wrap">
+                    <div id="wrap-5" class="switch-wrap">
                         <?= zen_draw_radio_field('feedback', LABEL_FEEDBACK_6, '', 'id="switch_5"') ?>
                         <label for="switch_5"><?= LABEL_FEEDBACK_6 ?></label>
                         <div class="reveal-if-active go-up"> 
@@ -359,7 +358,7 @@ if ($action === 'success') {
 ?>
                         <div id="clear-box" class="box center text-center">
                             <p class="guidelines"><?= TEXT_FIELD_FEEDBACK_IMAGE ?></p>
-                            <input type="file" name="file" id="inp_file" class="upfile upfile-1">
+                            <input type="file" name="tm_img" id="inp_file" class="upfile upfile-1">
                             <label for="inp_file">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"/></svg>
                                 <span class="btn-file"><?= TEXT_FIELD_PICK_IMAGE ?></span>
@@ -452,7 +451,7 @@ $('#file-reset').on('click', function(e) {
 
                 <div id="button-row">
                     <?= zen_image_button(BUTTON_IMAGE_BACK, BUTTON_BACK_ALT) ?>
-                    <button class="cssButton btn submit_button button" type="submit" id="<?= $postme ?>">
+                    <button class="cssButton btn submit_button button mt-2" type="submit" id="<?= $postme ?>">
                         <?= BUTTON_TESTIMONIALS_SUBMIT_ALT ?>
                     </button>
                 </div>

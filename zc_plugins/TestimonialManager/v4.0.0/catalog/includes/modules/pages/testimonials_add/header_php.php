@@ -70,36 +70,6 @@ if ($action === 'send') {
     $screen_size = zen_db_prepare_input($_POST['screen_size'] ?? '');
     $feedback_about = !empty($_POST['feedback_about']) ? zen_db_prepare_input($_POST['feedback_about']) : ''; //Associate feedback, In-Store experience, Associate feedback
 
-    // Upload when form field is filled in by user 
-    $file = '';
-    if (DISPLAY_ADD_IMAGE === 'on' && isset($_POST['tm_img'])) {  //on off turns on/off uploads
-        if (str_starts_with($_POST['tm_img'], 'data:image') === 0) {
-            $img = $_POST['tm_img'];
-            if (str_starts_with($img, 'data:image/jpeg;base64,')) {
-                $img = str_replace('data:image/jpeg;base64,', '', $img);  
-                $ext = '.jpg';
-            } elseif (str_starts_with($img, 'data:image/png;base64,')) {
-                $img = str_replace('data:image/png;base64,', '', $img); 
-                $ext = '.png';
-            } else {
-                $error = true;
-                $messageStack->add('new_testimonial', 'Only jpg and png images are allowed.', 'error');
-            }
-
-            if (!$error) {
-                $img = str_replace(' ', '+', $img);
-                $data = base64_decode($img);
-                $file = TM_UPLOAD_DIRECTORY . 'img'.date("YmdHis").$ext;
-                 if (file_put_contents(DIR_WS_IMAGES . $file, $data)) {
-                    $messageStack->add('new_testimonial', 'The image was saved');
-                } else {
-                    $error = true;
-                    $messageStack->add('new_testimonial', 'The image could not be saved' , 'error');
-                }
-            }
-        }
-    }
-
     $gen_info = 
         "Find what you wanted: $testimonials_wanted\n" .
         "Already placed an order: $ordered\n" .
@@ -173,6 +143,23 @@ if ($action === 'send') {
             $zco_notifier->notify('NOTIFY_SPAM_DETECTED_USING_CONTACT_US');
         } else {
             $language_id = (int)$_SESSION['languages_id'];
+
+            // Upload when form field is filled in by user TM_UPLOAD_DIRECTORY
+            $file = '';
+            if (DISPLAY_ADD_IMAGE === 'on' && isset($_POST['tm_img'], $_FILES['tm_img']['tmp_name']) && $_FILES['tm_img']['tmp_name'] !== 'none') {
+                $upimg = new upload('tm_img');
+                $upimg->set_extensions(['jpg', 'jpeg', 'png']);
+                $tm_upload_directory = trim(TM_UPLOAD_DIRECTORY, '/') . '/';
+                $upimg->set_destination(DIR_FS_CATALOG . DIR_WS_IMAGES . $tm_upload_directory);
+                $upimg->set_output_messages('direct');
+                if ($upimg->parse() && $upimg->save()) {
+                    $upimg_name = $tm_upload_directory . $upimg->filename;
+                }
+                if ($upimg->filename !== 'none' && $upimg->filename !== '') {
+                    // save filename when not set to none and not blank
+                    $file = zen_limit_image_filename($upimg_name, TABLE_TESTIMONIALS_MANAGER, 'testimonials_upimg');
+                }
+            }
 
             $sql_data_array = [
                 'language_id' => (int)$language_id,
