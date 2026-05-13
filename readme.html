@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Testimonials Manager for Zen Cart v2.2.2 and Later</title>
+<style>
+a, a:active,
+a:visited {
+    color: #006666;
+}
+a:hover {
+    color:#00CC99;
+}
+body,
+p,
+h1,
+h2,
+h3,
+h4,
+li,
+td {
+    font-family: Verdana, AvantGarde, Tahoma, Arial, sans-serif;
+    font-size: 10pt;
+    color: black;
+    padding: 0px;
+    margin: 20px;
+}
+pre {
+    margin: 20px;
+}
+h1,
+h2,
+h3,
+h4 {
+    font-weight: bold
+}
+h1 {
+    font-size: 20px;
+}
+h2 {
+    font-size: 16px;
+    border-top: 1px solid black;
+    padding-top: 5px;
+}
+ol li,
+ul li {
+    margin: 5px 0;
+}
+.corefile,
+.impt {
+    color: red;
+}
+.added {
+    color: blue;
+}
+img {
+    margin-left: 20px;
+    max-width: 95%;
+}
+.removed {
+    text-decoration: line-through;
+}
+.smaller {
+    font-size: smaller;
+}
+</style>
+</head>
+
+<body>
+    <h1>Testimonials Manager for Zen Cart v2.2.2 and Later</h1>
+    <p>Version 4.0.0 by lat9</p>
+    <p>Current Support Thread at Zen Cart Forums: <a href="https://www.zen-cart.com/showthread.php/229376-Testimonials-Manager-Support-Thread" target="_blank">https://www.zen-cart.com/showthread.php/229376-Testimonials-Manager-Support-Thread</a></p>
+    <p>Zen Cart Download Link: <a href="https://www.zen-cart.com/downloads.php?do=file&id=2369" target="_blank">https://www.zen-cart.com/downloads.php?do=file&id=2369</a></p>
+    <p>GitHub repository: <a href="https://github.com/lat9/Testimonials-Manager" target="_blank">https://github.com/lat9/Testimonials-Manager</a></p>
+    <p>GitHub Wiki: <a href="https://github.com/lat9/Testimonials-Manager/wiki" target="_blank">https://github.com/lat9/Testimonials-Manager/wiki</a></p>
+
+    <h2>Purpose</h2>
+    <p>This (now <code>encapsulated</code>) version of the plugin lets customers leave feedback as to how the site performed and how it worked for them.  As with product reviews, a star rating is used for the testimonials' ranking.</p>
+    <p>The plugin is based on the like-named <a href="https://www.zen-cart.com/downloads.php?do=file&id=2369" target="_blank">Testimonials Manager</a> plugin by @davewest, last published in 2023.  The support for customer avatars has, however, been removed from the current version.</p>
+    <p>This version has been tested with Zen Cart v2.2.2 and the current Zen Cart <a href="https://github.com/zencart/zencart" target="_blank">Github repository</a>, using both the <code>responsive_classic</code> and <a href="https://www.zen-cart.com/downloads.php?do=file&id=2191" target="_blank">ZCA Bootstrap</a> templates.</p>
+
+    <h2>Installing, Upgrading or Uninstalling</h2>
+    <p>These sections identify the processes you'll use to initially install <em>Testimonials Manager</em>, upgrade or uninstall the plugin entirely.</p>
+    <p><b class="impt">Note:</b> If you want to display and/or edit the <code>define-page</code> for the <code>testimonials_add</code> page, you must ensure that you have applied the Zen Cart core-file changes provided in <a href="https://github.com/zencart/zencart/pull/7710" targer="_blank">this Zen Cart GitHub PR</a>. If those changes aren't applied, you won't be able to edit the define-page via the site's admin and it's possible that the <code>testimonials_add</code> page will whitescreen with a PHP error on the storefront.</p>
+    
+    <h3>Initial Installation or Upgrade</h3>
+    <hr>
+    <p><b class="impt">Note:</b> If you are upgrading from a previous, non-encapsulated, version of the plugin, you will need to <b>remove all files</b> provided by that previous version prior to installing an encapsulated version.  Failure to do so will most likely result in fatal PHP errors (both admin and storefront).  You can keep your configuration settings and they will be upgraded automatically.</p>
+    <hr>
+
+    <p>Start by copying the <em>Testimonials Manager</em> distribution's <code>zc_plugins</code> directory (and all its files) to the root of your site's file-system. You should see a <code>zc_plugins/TestimonialsManager</code> sub-directory when completed and &hellip;</p>
+    <ol>
+        <li>Login to your Zen Cart's admin</li>
+        <li>Navigate to <em>Modules :: Plugin Manager</em>.</li>
+        <li>Click on the row that displays a <code>Plugin Key</code> of <b>TestimonialsManager</b> and click the associated <b>Install</b> button.</li>
+        <li>All finished! You'll now see:<ul>
+            <li>A <b>Testimonial Manager</b> selection under the admin's <b>Configuration</b> tab.</li>
+            <li>A <b>Testimonial Manager</b> selection under the admin's <b>Tools</b> tab.</li>
+            <li>A new sidebox available when viewing the admin's <b>Tools :: Layout Boxes Controller</b>: <code>TestimonialsManager/{version}/testimonials_manager.php</code>.</li>
+        </ul></li>
+    </ol>
+
+    <h3>Uninstalling</h3>
+    <p>To uninstall <em>Testimonials Manager</em> &hellip;</p>
+    <ol>
+        <li>Navigate to your Zen Cart admin's <em>Modules :: Plugin Manager</em>.</li>
+        <li>Click on the row that displays a <code>Plugin Key</code> of <b>TestimonialsManager</b> and click the associated <b>Un-Install</b> button.</li>
+        <li>From the confirmation form, click that <b>Un-Install</b> button. That button-click will &quot;inactivate&quot; the plugin.</li>
+        <li>If you also want to remove the files associated with the plugin, click the <b>Clean Up</b> button.</li>
+    </ol>
+
+    <h2>Version History</h2>
+    <p>This section identifies the template's version history and changes, starting with its v4.0.0 release.</p>
+    <ul>
+        <li>v4.0.0-beta1, 2026-05-12 (lat9)<ul>
+            <li>This is the initial release of the encapsulated version of the plugin.</li>
+         </ul></li>
+    </ul>
+</body>
+</html>
