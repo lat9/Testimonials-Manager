@@ -16,14 +16,6 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 
 require 'includes/application_top.php';
-  
-//is working? or not z157
-$testimonials_sanitizer = AdminRequestSanitizer::getInstance();
-$testimonials_group = ['testimonials_html_text'];
-$testimonials_sanitizer->addSimpleSanitization('WORDS_AND_SYMBOLS_REGEX', $testimonials_group);
-
-$testimonials_group = ['testimonials_html_text'];
-$testimonials_sanitizer->addSimpleSanitization('PRODUCT_DESC_REGEX', $testimonials_group);
 
 $action = $_GET['action'] ?? '';
 
@@ -53,11 +45,6 @@ switch ($action) {
             $messageStack->add_session(SUCCESS_PAGE_STATUS_UPDATED, 'success');
         } 
         zen_redirect(zen_href_link(FILENAME_TESTIMONIALS_MANAGER, $page_param . '&bID=' . $_GET['bID']));
-        break;
-
-    case 'set_editor':
-        // Reset will be done by init_html_editor.php. Now we simply redirect to refresh page properly.
-        zen_redirect(zen_href_link(FILENAME_TESTIMONIALS_MANAGER, $page_param . (!empty($_GET['bID'])) ? '&bID=' . $_GET['bID'] : ''));
         break;
 
     case 'insert':
@@ -286,28 +273,28 @@ if ($action === 'new') {
 ?>
         <div id="dogicon"></div>
         <div class="form-group">
-            <?= zen_draw_label(TEXT_FEEDBACK, 'tm_status', 'class="col-sm-3 col-form-label"') ?>
+            <?= zen_draw_label(TEXT_FEEDBACK, 'tm_status', 'class="col-sm-3 control-label"') ?>
             <div class="col-sm-9 col-md-6">
                 <?= zen_draw_pull_down_menu('tm_status', $tm_status_array, $bInfo->status, 'class="form-control"') ?>
             </div>
         </div>
 
         <div class="form-group">
-            <?= zen_draw_label(TEXT_RATING, 'tm_rating', 'class="col-sm-3 col-form-label"') ?>
+            <?= zen_draw_label(TEXT_RATING, 'tm_rating', 'class="col-sm-3 control-label"') ?>
             <div class="col-sm-9 col-md-6">
                 <?= zen_draw_input_field('tm_rating', $bInfo->tm_rating, 'min="0" max="5" class="form-control"', true, 'number') ?>
             </div>
         </div>
 
         <div class="form-group">
-            <?= zen_draw_label(TEXT_TESTIMONIALS_NAME, 'testimonials_name', 'class="col-sm-3 col-form-label"') ?>
+            <?= zen_draw_label(TEXT_TESTIMONIALS_NAME, 'testimonials_name', 'class="col-sm-3 control-label"') ?>
             <div class="col-sm-9 col-md-6">
                 <?= zen_draw_input_field('testimonials_name', $bInfo->testimonials_name, zen_set_field_length(TABLE_TESTIMONIALS_MANAGER, 'testimonials_name') . ' class="form-control"', true) ?>
             </div>
         </div>
  
         <div class="form-group">
-            <?= zen_draw_label(TEXT_TESTIMONIALS_MAIL, 'testimonials_mail', 'class="col-sm-3 col-form-label"') ?>
+            <?= zen_draw_label(TEXT_TESTIMONIALS_MAIL, 'testimonials_mail', 'class="col-sm-3 control-label"') ?>
             <div class="col-sm-9 col-md-6">
                 <?= zen_draw_input_field('testimonials_mail', $bInfo->testimonials_mail, ' class="form-control"', true) ?>
             </div>
@@ -316,7 +303,7 @@ if ($action === 'new') {
     if ($form_action === 'insert') {
 ?>
         <div class="form-group">
-            <?= zen_draw_label(TEXT_TESTIMONIALS_DATE, 'date_added', 'class="col-sm-3 col-form-label"') ?>
+            <?= zen_draw_label(TEXT_TESTIMONIALS_DATE, 'date_added', 'class="col-sm-3 control-label"') ?>
             <div class="col-sm-9 col-md-6">
                 <div class="date input-group" id="datepicker">
                     <span class="input-group-addon datepicker_icon">
@@ -331,7 +318,7 @@ if ($action === 'new') {
     }
 ?>
         <div class="form-group">
-            <?= zen_draw_label(TEXT_CONTACT_USER, 'tm_contact_user', 'class="col-sm-3 col-form-label"') ?>
+            <?= zen_draw_label(TEXT_CONTACT_USER, 'tm_contact_user', 'class="col-sm-3 control-label"') ?>
             <div class="col-sm-9 col-md-6">
                 <label class="radio-inline"><?= zen_draw_radio_field('tm_contact_user', 'no', $bInfo->tm_contact_user === 'no') . TEXT_NO ?></label>
                 <label class="radio-inline"><?= zen_draw_radio_field('tm_contact_user', 'email', $bInfo->tm_contact_user === 'email') . TEXT_EMAIL ?></label>
@@ -340,14 +327,14 @@ if ($action === 'new') {
         </div>
 
         <div class="form-group">
-            <?= zen_draw_label(TEXT_USER_PHONE, 'tm_contact_phone', 'class="col-sm-3 col-form-label"') ?>
+            <?= zen_draw_label(TEXT_USER_PHONE, 'tm_contact_phone', 'class="col-sm-3 control-label"') ?>
             <div class="col-sm-9 col-md-6">
                 <?= zen_draw_input_field('tm_contact_phone', $bInfo->tm_contact_phone, ' class="form-control"', false) ?>
             </div>
         </div>
 
         <div class="form-group">
-            <?= zen_draw_label(TEXT_PUBLIC, 'tm_make_public', 'class="col-sm-3 col-form-label"') ?>
+            <?= zen_draw_label(TEXT_PUBLIC, 'tm_make_public', 'class="col-sm-3 control-label"') ?>
             <div class="col-sm-9 col-md-6">
                 <label class="radio-inline"><?= zen_draw_radio_field('tm_make_public', 'yes', $bInfo->tm_make_public === 'yes') . TEXT_YES ?></label>
                 <label class="radio-inline"><?= zen_draw_radio_field('tm_make_public', 'no', $bInfo->tm_make_public !== 'yes') . TEXT_NO ?></label>
@@ -355,7 +342,7 @@ if ($action === 'new') {
         </div>
 
         <div class="form-group">
-            <?= zen_draw_label(TEXT_PRIVACY, 'tm_privacy_conditions', 'class="col-sm-3 col-form-label"') ?>
+            <?= zen_draw_label(TEXT_PRIVACY, 'tm_privacy_conditions', 'class="col-sm-3 control-label"') ?>
             <div class="col-sm-9 col-md-6">
                 <label class="radio-inline"><?= zen_draw_radio_field('tm_privacy_conditions', 1, (int)$bInfo->tm_privacy_conditions === 1,'id="email_format_left"') . TEXT_YES ?></label>
                 <label class="radio-inline"><?= zen_draw_radio_field('tm_privacy_conditions', 0, (int)$bInfo->tm_privacy_conditions !== 1, 'id="email_format_right"') . TEXT_NO ?></label>
@@ -363,28 +350,28 @@ if ($action === 'new') {
         </div>
 
         <div class="form-group">
-            <?= zen_draw_label(TEXT_TESTIMONIALS_TITLE, 'testimonials_title', 'class="col-sm-3 col-form-label"') ?>
+            <?= zen_draw_label(TEXT_TESTIMONIALS_TITLE, 'testimonials_title', 'class="col-sm-3 control-label"') ?>
             <div class="col-sm-9 col-md-6">      
                 <?= zen_draw_input_field('testimonials_title', $bInfo->testimonials_title, zen_set_field_length(TABLE_TESTIMONIALS_MANAGER, 'testimonials_title') . 'class="editorHook form-control"', true) ?>
             </div>
         </div>
 
         <div class="form-group">
-            <?= zen_draw_label(TEXT_TESTIMONIALS_HTML_TEXT, 'testimonials_html_text', 'class="col-sm-3 col-form-label"') ?>
+            <?= zen_draw_label(TEXT_TESTIMONIALS_HTML_TEXT, 'testimonials_html_text', 'class="col-sm-3 control-label"') ?>
             <div class="col-sm-9 col-md-6">
                 <?= zen_draw_textarea_field('testimonials_html_text', 'soft', '100', '10', $bInfo->testimonials_html_text, 'class="editorHook form-control"', false) ?>
             </div>
         </div>
 
         <div class="form-group">
-            <?= zen_draw_label(TEXT_HELPFUL_YES, 'helpful_yes', 'class="col-sm-3 col-form-label"') ?>
+            <?= zen_draw_label(TEXT_HELPFUL_YES, 'helpful_yes', 'class="col-sm-3 control-label"') ?>
             <div class="col-sm-9 col-md-6">
                 <?= zen_draw_input_field('helpful_yes', $bInfo->helpful_yes, 'min="0" class="form-control"', false, 'number') ?>
             </div>
         </div>
 
         <div class="form-group">
-            <?= zen_draw_label(TEXT_HELPFUL_NO, 'helpful_no', 'class="col-sm-3 col-form-label"') ?>
+            <?= zen_draw_label(TEXT_HELPFUL_NO, 'helpful_no', 'class="col-sm-3 control-label"') ?>
             <div class="col-sm-9 col-md-6">
                 <?= zen_draw_input_field('helpful_no', $bInfo->helpful_no, 'min="0" class="form-control"', false, 'number') ?>
             </div>
@@ -462,22 +449,7 @@ if ($action === 'new') {
                 <span><?= STATUS_BANNED . '&nbsp;' . sprintf(CIRCLE_FORMAT, $color_banned, '18px') . USER_CIRCLE ?></span>
             </div>
 
-            <div class="col-md-4"></div>
-
-            <div class="col-md-4">
-                <?= zen_draw_form('set_editor_form', FILENAME_TESTIMONIALS_MANAGER, '', 'get', 'class="form-horizontal"') ?>
-                <div class="form-group">
-                    <?= zen_draw_label(TEXT_EDITOR_INFO, 'reset_editor', 'class="col-sm-6 col-md-4 control-label"') ?>
-                    <div class="col-sm-6 col-md-8">
-                        <?= zen_draw_pull_down_menu('reset_editor', $editors_pulldown, $current_editor_key, 'onchange="this.form.submit();" class="form-control" id="reset_editor"') ?>
-                    </div>
-                    <?= zen_hide_session_id() ?>
-                    <?= zen_draw_hidden_field('action', 'set_editor') ?>
-                    <?= (isset($_GET['bID']) ? zen_draw_hidden_field('bID', (int)$_GET['bID']) : '') ?>
-                    <?= ($pagenum > 1) ? zen_draw_hidden_field('page', $pagenum) : '' ?>
-                </div>
-                <?= '</form>' ?>
-            </div>
+            <div class="col-md-8"></div>
         </div>
 
         <div class="row">
