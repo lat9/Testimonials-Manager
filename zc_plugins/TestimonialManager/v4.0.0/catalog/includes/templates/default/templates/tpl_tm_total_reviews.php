@@ -25,6 +25,9 @@ $feedback_query =
       WHERE language_id = " . (int)$_SESSION['languages_id'] . "
         AND status = 1";
 $feedback = $db->Execute($feedback_query);
+if ((int)$feedback->fields['count'] === 0) {
+    return;
+}
 
 $stars_rating = number_format((float)$feedback->fields['average_rating'], 1, '.', '');
 $prating = number_format((float)$feedback->fields['average_rating'], 2, '.', '') * 20;
