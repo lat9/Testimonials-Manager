@@ -120,7 +120,7 @@ switch ($action) {
 
         if ($action === 'insert') {
             $date_added_raw = zen_db_prepare_input($_POST['date_added']);
-            if ($date_scheduled_raw === '') {
+            if ($date_added_raw === '') {
                 $date_added = 'now()';
             } else {
                 if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($date_added_raw)) {
@@ -136,9 +136,10 @@ switch ($action) {
                 } else {
                     $page_error = true;
                     $messageStack->add(ERROR_INVALID_DATE, 'error');
+                    $action = ($action === 'insert') ? 'new' : 'edit';
+                    break;
                 }
             }
-
             $sql_data_array['date_added'] = $date_added;
 
             zen_db_perform(TABLE_TESTIMONIALS_MANAGER, $sql_data_array);
